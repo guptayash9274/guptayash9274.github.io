@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Cointegrated Processes</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Harsh Gupta | Saransh Gupta | Yash Gupta" />
+    <meta name="date" content="2024-10-12" />
+    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Cointegrated Processes
+]
+.subtitle[
+## Financial Econometrics
+]
+.author[
+### Harsh Gupta | Saransh Gupta | Yash Gupta
+]
+.institute[
+### Indian Statistical Institute, Kolkata
+]
+.date[
+### 2024-10-12
+]
+
+---
+
+
+
+
+
+
+&lt;!-- SARANSH --&gt;
+
+# What is Cointegration?
+
+- Important for modelling **long run relationships** between components
+
+--
+
+- Occurs within multiple non-stationary time series
+
+  - Having a long-run equilibrium
+  
+--
+  
+  - Their linear combination results in stationary time series
+  
+--
+
+- **Cointegration vector** ( `\(\boldsymbol{\alpha}\)` )
+
+  - Linear combination of `\(p\)`-variate series `\(\boldsymbol{y}_t\)`
+  
+--
+
+  - Each component: `\(y_{i,t} \sim I(1) \ \ \forall i = 1, \cdots,p\ \ [\text{ADF Test accepts NULL}]\)`
+
+--
+
+  - Combination `\(\boldsymbol{\alpha}^T \boldsymbol{y}_t \sim I(0) \text{, or stationary}\ \ \ \ \ [\text{ADF Test rejects NULL}]\)`
+  
+--
+
+- Ignoring this results in **biased** estimates
+
+
+
+---
+
+# Preparing for Cointegration Tests
+
+- Idea for shared trend **supported** by theory
+
+--
+
+- Visualizing the time series
+
+--
+
+- Structural Breaks?
+  - Render cointegration tests **invalid**
+  
+--
+
+&lt;img src="snipsgoldsilver/Structural Break.png" width="484" style="display: block; margin: auto;" /&gt;
+
+  
+--
+
+- Unit Root Testing (using ADF Test, KPSS Test)
+
+---
+
+# Questions to Pose
+
+`$$\text{Are there multiple cointegrating vectors or just one?}$$`
+--
+
+- For bivariate series, use **Engle-Granger procedure**
+- For more dimensions, use **Johansen Approach**
+
+--
+
+
+`$$\text{Is the cointegrating vector known or does it need to be estimated?}$$`
+
+--
+
+
+`$$\text{What deterministic components are included in the cointegrating relationship?}$$`
+
+--
+
+`$$\text{Do we suspect structural breaks in the cointegrating relationship?}$$`
+
+---
+
+# Data Description: Commodity Prices Data
+
+- It is a historic time series data, providing 
+  - Information on precious metals' futures including Copper
+  - Prices of Gold, Palladium, Platinum, Silver   
+
+&lt;br&gt;
+
+--
+
+- For each commodity we have the following: 
+  - Daily opening/closing prices
+  - Daily high/low prices 
+  - Daily volume reported
+
+&lt;br&gt;
+
+--
+
+- Starting Date : 30th Aug, 2000
+- End Date: 17th April, 2024
+
+`$$\text{We'll analyze closing prices for Gold, Silver and Copper}$$`
+
+---
+
+## Data Analysis: Gold and Silver
+
+
+- Analyze precious metals Gold and Silver.
+--
+
+
+- Load gold and silver data
+
+
+```r
+gold_data = read.csv("Commodity_Data/Gold_data.csv")
+silver_data = read.csv("Commodity_Data/Silver_data.csv")
+```
+
+- Storing the data as time Series objects.
+
+
+```r
+gold_ts &lt;- ts(log(gold_data$close), start = c(2000, 08), frequency = 12)
+silver_ts &lt;- ts(log(silver_data$close), start = c(2000, 08), frequency = 12)
+```
+
+
+
+---
+
+## Data Analysis (Cont.)
+
+
+```r
+plot.ts(cbind(gold_ts, silver_ts), plot.type = "single", ylab = "", 
+    col = 4:3)
+```
+
+--
+
+&lt;img src="snipsgoldsilver/goldsilver.png" width="50%" height="20%" style="display: block; margin: auto;" /&gt;
+
+--
+
+- We observe that as gold prices increase or decrease, also does the silver prices.
+
+   - Therefore, we suspect if the two series are cointegrated.
+
+---
+
+# Gold: ADF Test (with trend and drift)
+
+
+```r
+adfg1 &lt;- ur.df(gold_ts, type = "trend", selectlags = c("BIC"))
+summary(adfg1)
+```
+
+&lt;img src="snipsgoldsilver/Gold_ADF.JPG" width="50%" /&gt;
+
+`$$\text{Null NOT Rejected }(p=0.75) \implies \text{Series has Unit Root}$$`
+
+---
+
+# Gold First Difference Series ADF Test
+
+```r
+adfg2 &lt;- ur.df(diff(gold_ts), selectlags = c("BIC"))
+summary(adfg2)
+```
+
+&lt;img src="snipsgoldsilver/Gold_Diff_ADF.JPG" width="50%" /&gt;
+
+`$$\text{Null Rejected }(p = 0.01) \implies \text{First Difference STATIONARY}$$`
+
+
+---
+
+
+# Silver: ADF Test (with trend and drift)
+
+
+```r
+adfs1 &lt;- ur.df(gold_ts, type = "trend", selectlags = c("BIC"))
+summary(adfs1)
+```
+
+&lt;img src="snipsgoldsilver/Silver_ADF.JPG" width="50%" /&gt;
+`$$\text{Null NOT Rejected }(p=0.63) \implies \text{Series has Unit Root}$$`
+
+
+---
+# Silver First Difference Series ADF Test
+
+
+```r
+adfs2 &lt;- ur.df(diff(gold_ts), selectlags = c("BIC"))
+summary(adfs2)
+```
+
+
+&lt;img src="snipsgoldsilver/Silver_Diff_ADF.JPG" width="50%" /&gt;
+
+`$$\text{Null Rejected }(p = 0.01) \implies \text{First Difference STATIONARY}$$`
+
+---
+
+## Plotting Residuals
+
+
+```r
+data &lt;- ts.union(gold_ts, silver_ts)
+gold.silver.eq &lt;- lm(gold_ts ~ silver_ts, data = data)
+plot.ts(gold.silver.eq$residuals)
+```
+
+
+&lt;img src="snipsgoldsilver/residuals1.png" width="60%" height="20%" style="display: block; margin: auto;" /&gt;
+
+
+`$$\text{Residuals appear to be STATIONARY}$$`
+
+---
+
+# Residuals
+
+
+```r
+error.gold.silver &lt;- ur.df(gold.silver.eq$residuals, lags = 1, type = "none")
+summary(error.gold.silver)
+```
+
+&lt;img src="snipsgoldsilver/residuals.png" width="50%" /&gt;
+
+`$$\text{Null Rejected } \implies \text{Residuals are Stationary } \implies \textbf{} \textbf{ Cointegration}$$`
+
+
+---
+
+# The Error Correction Model (ECM)
+
+- Allows to better understand long-run dynamics
+- Measures forces that push relationship towards equilibrium
+
+--
+
+- Assume bivariate system `\(\boldsymbol{y}_t = (y_{1,t}, y_{2,t})\)`
+
+--
+
+  - with cointegrating vector `\(\boldsymbol{\alpha} = (1, -\beta_2)\)`
+
+--
+
+- ECM Model:
+
+`$$\Delta y_{1,t} = c_1 + \delta_1 (y_{1,t} -\beta_2 y_{2,t}) + \sum_{j} \psi_{11}^j \Delta y_{1,t-j} + \sum_{j} \psi_{12}^j \Delta y_{2,t-j} + \epsilon_{1,t}$$`
+
+`$$\Delta y_{2,t} = c_2 + \delta_2 (y_{1,t} -\beta_2 y_{2,t}) + \sum_{j} \psi_{21}^j \Delta y_{1,t-j} + \sum_{j} \psi_{22}^j \Delta y_{2,t-j} + \epsilon_{2,t}$$`
+
+---
+
+## ECM Model Evaluation
+
+
+```r
+ecm.silver &lt;- lm(silver.d ~ error.ecm1 + gold.d1 + silver.d1)
+```
+
+&lt;img src="snipsgoldsilver/Gold_Silver_ECM.jpg" width="70%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+- Coefficient of `\(\delta_2\)` from ECM model is significant
+
+`$$\text{Long term equilibrium established in } \frac{1}{0.002661} \approx 376 \text{ trading days}$$`
+---
+
+# Data Analysis: Gold vs Copper
+
+- Analyze cheap metal `\(\text{Copper}\)` with `\(\text{Gold}\)` for cointegration
+
+--
+
+- Economic Evidence: **Copper-Gold Ratio**
+  -  Lead indicator for 10-year Treasury yield ([Source](https://blogs.cfainstitute.org/investor/2023/03/16/is-the-copper-gold-ratio-a-leading-indicator-on-rates/))
+  
+--
+
+- Load the `\(\text{Copper}\)` data: 5933 observations
+
+
+```r
+gold_data = read.csv("Commodity_Data/Gold_data.csv")
+copper_data = read.csv("Commodity_Data/Copper_data.csv")
+```
+
+
+- Preprocess the data
+
+
+```r
+excluded_list_date = copper_data[c(259, 1203, 1577, 2582),]$date
+copper_data = subset(copper_data,!(date %in% excluded_list_date))
+```
+
+
+
+
+---
+
+## Gold vs Copper Closing Price
+
+
+```r
+plot.ts(cbind(gold_ts, copper_ts), plot.type = "single", ylab = "", 
+    col = 4:3)
+```
+
+&lt;img src="snipsgoldsilver/Gold_Copper_Line_Chart.JPG" width="60%" height="20%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Copper: ADF Test (with Trend and Drift)
+
+
+```r
+adfc1 &lt;- ur.df(copper_ts, type = "trend", selectlags = c("BIC"))
+summary(adfc1)
+```
+
+
+&lt;img src="snipsgoldsilver/Copper_ADF_Test.jpg" width="60%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+
+`$$\text{Null NOT Rejected }(p=0.65) \implies \text{Series has Unit Root}$$`
+
+---
+
+## Copper First Difference Series ADF Test
+
+
+```r
+adfc2 &lt;- ur.df(diff(copper_ts), selectlags = c("BIC"))
+```
+
+&lt;img src="snipsgoldsilver/Copper_ADF_Test(diff).jpg" width="60%" /&gt;
+
+`$$\text{Null Rejected }(p = 0.01) \implies \text{First Difference STATIONARY}$$`
+
+---
+
+## Plotting Residuals
+
+
+
+```r
+data &lt;- ts.union(gold_ts, copper_ts)
+gold.copper.eq &lt;- lm(gold_ts ~ copper_ts, data = data)
+plot.ts(gold.copper.eq$residuals)
+```
+
+
+&lt;img src="Gold_to_Copper_residuals" width="60%" height="20%" style="display: block; margin: auto;" /&gt;
+
+`$$\text{Residuals appear to be STATIONARY}$$`
+
+---
+
+## Residuals: 
+
+
+```r
+error.gold.copper &lt;- ur.df(gold.copper.eq$residuals, type = "trend", selectlags = c("BIC"))
+```
+
+&lt;img src="snipsgoldsilver/Gold_Copper_Residual_ADF_Test.JPG" width="70%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+
+`$$\text{Null NOT Rejected } \implies \text{Residual has UNIT ROOT } \implies \textbf{NO} \text{ Cointegration}$$`
+
+---
+
+&lt;img src="snipsgoldsilver/TY2.jpg" width="1200" /&gt;
+
+---
+
+## Appendix: ADF Test Intricacies
+
+- Implementation: `\(\text{urca}\)` package
+
+- Can write ADF Test with 3 values for `\(\text{type}\)`
+
+- If we suspect **trend and drift** both:
+  
+
+```r
+adfc1 &lt;- ur.df(copper_ts, type = "trend", selectlags = c("BIC"))
+```
+
+--
+
+  - If we suspect **only drift**:
+
+
+```r
+adfc1 &lt;- ur.df(copper_ts, type = "drift", selectlags = c("BIC"))
+```
+
+--
+
+  - If we suspect both trend and drift **absent**
+
+
+```r
+adfc1 &lt;- ur.df(copper_ts, type = "none", selectlags = c("BIC"))
+```
+
+--
+
+- More specific Null gives **more power** to test
+
+
+&lt;!--  THANK YOU &amp; REFERENCES --&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"fontsize": "10pt",
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

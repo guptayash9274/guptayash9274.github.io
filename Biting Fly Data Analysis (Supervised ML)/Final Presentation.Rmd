@@ -1,0 +1,1195 @@
+---
+title: "On Classifying The Biting Fly"
+subtitle: "A Multivariate Analysis Project"
+author: "Aditya Negi, Harsh Gupta, Yash Gupta"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(class)
+library(tidyverse)
+library(MASS)
+library(plotly)
+library(mvoutlier)
+library(ppcc)
+library(GGally)
+library(ggfortify)
+library(mvnormtest)
+library(reshape2)
+library(car)
+library(caret)
+library(mvnTest)
+library(nortest)
+library(gridExtra)
+library(psych)
+library(onewaytests)
+```
+
+## Why Biting Fly? Theoretical Background
+
+- The data is from two species of biting flies of the genus _Leptoconops_, namely _L. carteri_ and _L. torrens_, found in the western United States and Mexico. They are so similar in appearance ("morphologically") that they were considered to be the same species. However, behavioural differences were found between the two forms.
+
+---
+
+## Details
+
+ In particular: 
+
+  - Females of _L. carteri_ are "persistent, diurnal biters" and attack the legs of humans as well as the upper body parts, while females of _L. torrens_ do not bite the legs.
+
+  - _L. carteri_ breeds in level terrain, while _L. torrens_ comes from sloping, sometimes steep terrain
+
+  - Males of _L. carteri_ do not form swarms,  while males of _L. torrens_ form conspicuous swarms.
+
+  - The sex ratio of emerging _L. torrens._ was 1.64 females per one male, while it was only 1.33 females to one male for _L. carteri_.
+
+  - The females of _L. torrens_ laid 30.4 eggs on average in laboratory conditions, while the females of _L. carteri_ laid only 13.9 eggs on average.
+
+---
+  
+## Original Study 
+
+- "Based on these biological differences, Wirth & Atchley (1973) resurrected carteri from synonomy but were able to find only a single consistent and objective morphological difference between the 2 taxa, i.e., a microscopic pubescence on the eyes."  That is, the only distinguishing feature between the two species was that _L. torrens_ lacked a fine layer of hair over their eyes! 
+
+- This was the motivator behind the original 1975 statistical analysis. William Atchley wanted to find "additional distinguishing features between the two species".
+
+- The flies were identified on the basis of morphological differences. Because of storage requirements, only 70 specimens could be used; hence, 35 specimens were chosen from each species. 
+
+- In the original 1975 study, the techniques used were canonical covariate analysis, stepwise discriminant analysis, multidimensional scaling, and multivariate ANOVA. 
+
+---
+
+## Our Study
+
+Our dataset is a truncated version of the original; of the original 13 variables, we have only 7. **Our goals are twofold.** 
+
+1) We want to evaluate the validity of the original statistical analysis. In particular, do the assumptions in the original hold? Do we obtain the same results as they do with a smaller subset of the variables?
+
+2) We would like to use techniques which were not used in the original analysis to obtain more insight.
+
+---
+
+# Exploratory Data Analysis
+
+The data consists of 70 rows and 8 columns. They are as follows: 
+
+1) Group: 0 for _L. torrens_, 1 for _L. carteri_. 
+
+2) Wing length, shortened to "WL" 
+
+3) Wing width, shortened to "WW"
+
+4) Third palp length, shortened to "TPL". (Palps are organs between the antennae responsible for smell, touch, and taste)
+
+5) Third palp width, shortened to "TPW".
+
+6) Fourth palp length, shortened to "FPL".
+
+7) Length of twelfth antennal segment, shorted to "ASTW"
+
+8) Length of thirteenth antennal segment, shortened to "ASTH". 
+
+Except from Group, which is categorical, all of these variables are numeric.
+
+---
+
+## Glance at the Data
+
+```{r data_loading, echo=FALSE, include=FALSE}
+fly<-read.table("fly.txt")
+colnames(fly)<-c("Group", "WL", "WW", "TPL", "TPW", "FPL", "ASTW", "ASTH")
+fly$Group<-factor(fly$Group)
+
+fly0<-subset(fly, Group==0)
+fly1<-subset(fly, Group==1)
+
+fly0<-subset(fly0, select = -Group)
+fly1<-subset(fly1, select = -Group)
+
+rownames(fly0)<-1:nrow(fly0)
+rownames(fly1)<-1:nrow(fly1)
+```
+
+```{r}
+head(fly)
+str(fly)
+```
+
+---
+
+## Box Plots
+
+As a first step, we're interested in comparing the variables in the two distinct datasets.
+
+
+
+```{r, echo=F}
+pivot<-pivot_longer(fly, -Group)
+ggplot(pivot, aes(y=value, fill=Group))+geom_boxplot()+facet_wrap(~name, scales = "free")+theme(axis.title.x=element_blank(), axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+```
+
+---
+
+## Density Plot
+
+```{r}
+ggplot(pivot, aes(x=value, fill=Group))+geom_density(alpha=0.5)+facet_wrap(~name, scales = "free")
+```
+
+---
+
+## Comments 
+
+- There is some separation betwe↑en the measures of central tendency for almost all of the variables.
+
+- The third palp length and fourth palp length of the two groups are especially distinct.
+
+- There is an extreme outlier in wing width. It is quite likely a mismeasurement and a strong candidate for removal.
+
+- Many of the variables are "widely spread". Further, the antennal segment variables exhibit "bumps" because they are discrete in nature. It may be difficult to transform them to normality. 
+
+- Before classifying into groups, it is quite clear from the density plots that most of the variables are very far from normal. 
+
+---
+
+## Correlation plot
+
+``` {r corr EDA}
+ggpairs(fly[, -1])
+```
+
+---
+
+## Comments 
+
+- Wing length is significantly correlated with every other variable. Wing width is significantly correlated with every variable other than the thirteenth antennal segment length. This may suggest that these two variables are indicators of "general size".
+
+- The palp lengths are significantly correlated with each other; third palp length is not significantly correlated with third palp width, but fourth palp length _is_. 
+
+- The antennal segments are, perhaps unsurprisingly, _very_ strongly correlated with each other.
+
+
+---
+
+
+## Data visualisation using PCA
+
+With seven different variables, it is difficult to directly guess about "separation" between the two groups. Graphing the first few principal components may indicate clear differences and suggest more detailed investigation. 
+
+
+```{r PCA, echo=FALSE}
+
+flyg.pcs<-prcomp(fly[, -1])
+summary(flyg.pcs)
+screeplot(flyg.pcs, type = "lines")
+biplot(flyg.pcs)
+```
+
+---
+
+```{r PCA2, echo=FALSE}
+flyg.pcs
+head(flyg.pcs$x)
+autoplot(flyg.pcs, data=fly, color= "Group")
+```
+
+Clearly, there is some evidence that the groups are "separate", but plenty of observations from group 1 are mixed in with group 0. Does plotting the third principal component help?
+
+---
+
+## 3D Plot
+
+It doesn't seem that adding a third principal component to the visualisation helps much.
+
+```{r, warning=F}
+flyg3d<-cbind(as.numeric(as.character(fly[, 1])), flyg.pcs$x)
+colnames(flyg3d)<-c( "Group",    "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7")
+View(flyg3d)
+flyg3d<-as.data.frame(flyg3d)
+flyg3d$Group<-factor(flyg3d$Group)
+fig<-plot_ly(flyg3d, x=~PC1, y=~PC2, z=~PC3, color=~Group, type = "scatter3d", mode="markers")
+fig
+```
+
+
+---
+
+## Factor Analysis
+
+According to the PCA, two linear combinations of the variables explain most of the variation in the data. This suggests that factor analysis might be helpful.  
+
+First, we perform principal component factor analysis. We can do this even though we have not yet verified the assumption of multivariate normality. Because two principal components explain most of the variation in the data, we suspect that two factors may be enough.  
+
+```{r PCFA}
+fly.fa.covar<-principal(fly[, -1], nfactors = 2, rotate = 'none', scores = T)
+fly.fa.covar
+biplot(fly.fa.covar, main="No Rotation")
+```
+
+---
+
+## Rotation
+
+Next, we attempt a varimax rotation.
+
+```{r PCFA Varimax}
+fly.fa.covarmax<-principal(fly[, -1], nfactors = 2, rotate = 'varimax', scores=T)
+fly.fa.covarmax
+```
+
+```{r}
+biplot(fly.fa.covar, main="Varimax Rotation")
+```
+
+The varimax rotation is easier to interpret. The first factor is heavily loaded on the non-antennal segment data, while the second factor is highly loaded on antennal length data. Hence we can roughly call the first factor the "non-antennal factor" and the second the "antennal factor". 
+
+--- 
+
+## Summary 
+
+We can summarise our factor loadings as follows:
+
+```{r}
+fa.diagram(fly.fa.covarmax$loadings)
+```
+
+Factor analyses were attempted for 3 and 4 factors, but they yielded unsatisfactory results. 
+
+---
+## Assumptions for MANOVA
+
+1) The observations from each population should be independently drawn.
+
+2) Each population is multivariate normal. 
+
+3) The populations should have a common covariance matrix $\Sigma$.
+
+
+The first of these assumptions we may take to be true, because these are observations from different specimens. It remains to verify 2) and 3). 
+
+---
+
+## Assumption of Multivariate Normality
+
+Before going to test Multivariate Normality, we will first test univariate normality of each of the variables.(at 1% level of significance.)
+
+### Univariate Normality
+
+
+#### Wing Length
+
+```{r}
+  nor.test(fly[, 2]~Group, data=fly, plot="qqplot")
+```
+
+#### Wing Width
+
+```{r}
+  nor.test(fly[, 3]~Group, data=fly, plot="qqplot")
+```
+
+#### Third Palp Length
+
+```{r}
+  nor.test(fly[, 4]~Group, data=fly, plot="qqplot")
+```
+
+
+#### Third Plap Width
+
+```{r}
+  nor.test(fly[, 5]~Group, data=fly, plot="qqplot")
+```
+
+#### Fourth Palp Length
+
+```{r}
+  nor.test(fly[, 6]~Group, data=fly, plot="qqplot")
+```
+
+#### Antennal Segment 12
+
+```{r}
+  nor.test(fly[, 7]~Group, data=fly, plot="qqplot")
+```
+
+---
+
+#### Antennal Segment 13
+
+```{r}
+  nor.test(fly[, 8]~Group, data=fly, plot="qqplot")
+```
+
+**Comments**
+
+Most of the variables fail to demonstrate any kind of univariate normality. We must resort to some transformation of the data to attain normality. 
+
+---
+
+## Box-Cox Transformations
+
+Firstly, we will remove observation 36, which was a prominent outlier with regards to wing width.
+
+```{r,echo=TRUE}
+flyr<-fly[-36, ]
+transformed.flyr<-flyr
+```
+
+Now, We will apply Box-Cox transformation on each variable one by one.   
+
+### Wing Length
+
+```{r,echo=TRUE}
+boxcox(lm(data = flyr, WL~Group),lambda = seq(-2.5,7.5,1/10))
+# lambda = 2  (MLE)
+transformed.flyr$WL <- bcPower(flyr$WL,2)
+nor.test(WL~Group,data=transformed.flyr, plot=NULL,alpha=0.01)
+```
+
+### Wing Width
+
+```{r,echo=TRUE,include=F}
+boxcox(lm(flyr$WW~flyr$Group),lambda = seq(-1,7,1/10),plotit=FALSE)
+#lambda = 3
+```
+
+
+```{r,echo=TRUE}
+transformed.flyr$WW = bcPower(flyr$WW, 3)
+nor.test(WW~Group,data=transformed.flyr,plot=NULL, alpha=0.01)
+```
+
+### Third Palp Length
+
+```{r,echo=TRUE,include=F}
+boxcox(lm(flyr$TPL~flyr$Group),lambda = seq(-1,1,1/10),plotit=FALSE)
+#lambda = 0.5
+```
+
+
+```{r,echo=TRUE}
+transformed.flyr$TPL = bcPower(flyr$TPL,0.5)
+nor.test(TPL~Group,data=transformed.flyr,plot=NULL, alpha=0.01)
+```
+
+### Third Palp Width
+
+```{r,echo=TRUE,include=F}
+boxcox(lm(flyr$TPW~flyr$Group),lambda = seq(-2.5,7.5,1/10),plotit=FALSE)
+# lambda =0
+```
+
+
+```{r,echo=TRUE}
+transformed.flyr$TPW = bcPower(flyr$TPW,0)
+nor.test(TPW~Group,data=transformed.flyr,plot=NULL, alpha=0.01)
+```
+
+**Comments**
+
+- Of these first four variables, normality is attained for all except for wing length of second group at $\alpha = 0.01$. In the name of pragmatism, we will assume that to be normal.
+
+
+### Fourth Palp Length  
+```{r,echo=TRUE}
+boxcox(lm(flyr$FPL~flyr$Group),lambda = seq(-2,2,1/10))
+# lambda =1
+```
+
+### Antennal Segment Twelwe
+
+```{r,echo=TRUE}
+boxcox(lm(flyr$ASTW~flyr$Group),lambda = seq(-2.5,2.5,1/10))
+# lambda =1
+```
+
+### Antennal Segment Thirteen
+
+```{r,echo=TRUE}
+#as13
+boxcox(lm(flyr$ASTH~flyr$Group),lambda = seq(-2.5,2.5,1/10))
+# lambda =1
+
+
+```
+
+**Comments**
+
+- For these three variables(FPL,ASTW,ASTH), the Maximum Likelihood Estimate of $\lambda$ is 1, so the Box-Cox transformation cannot improve normality there. 
+- For FPL variable, this estimate of $\lambda$ can be justified by the fact that FPL has a heavy tail distribution. - For antennal segment variables, this can be justified by the fact that these variables are very discrete in nature i.e. they are taking vary few values. As a solution we will add jitter(random error) in the last two variables.
+
+```{r}
+set.seed(316)
+transformed.flyr$ASTW = transformed.flyr$ASTW + runif(nrow(flyr),-0.5, 0.5)
+transformed.flyr$ASTH = transformed.flyr$ASTW + runif(nrow(flyr),-0.5, 0.5)
+
+nor.test(ASTW~Group, data=transformed.flyr, plot=NULL, alpha = 0.01)
+nor.test(ASTH~Group,data=transformed.flyr, plot=NULL, alpha = 0.01)
+```
+
+**Comments**
+
+Now that we have added jitter, ASTW & ASTH variables are also showing univariate normality.
+
+## Detecting Other Outliers
+
+We try to detect outliers in our transformed data matrix. 
+
+```{r, echo=FALSE}
+tA = as.data.frame(transformed.flyr[1:35,c(1,2,3,4,5,6,7,8)])    
+tB = as.data.frame(transformed.flyr[36:69,c(1,2,3,4,5,6,7,8)])  
+S.tA = cov(tA[,-1])
+S.tB = cov(tB[,-1])
+txbar = colMeans(tA[,-1])
+tybar = colMeans(tB[,-1])
+
+md_0 = mahalanobis(tA[,-1], center = txbar, cov = S.tA)
+md_1 = mahalanobis(tB[,-1], center = tybar, cov = S.tB)
+
+cutoff <- qchisq(p = 0.95 , df = 7)
+cutoff2 = qchisq(0.99, df = 7)
+
+out0 = (md_0>cutoff)
+out1 = (md_1>cutoff)
+
+
+
+dns<-function(x) dchisq(x,df=4)
+
+densityplot(~md_0 + md_1,grid=T,col=c("green","blue"),
+            key=list(space="top",lines=list(col=c("green","blue")),text=list(c("L.Torrens","L.Carteri"))),xlab="Mahalonobis distances")+
+  latticeExtra::layer(panel.curve(dns,lty=2))+
+  latticeExtra::layer(panel.abline(v=cutoff,lty = 3,col="grey50"))+
+  latticeExtra::layer(panel.abline(v=cutoff2,lty = 3,col="grey50"))+
+  latticeExtra::layer(panel.text(x=cutoff,y=.08,"level 5%"))+
+  latticeExtra::layer(panel.text(x=cutoff2,y=.08,"level 1%"))+
+  latticeExtra::layer(panel.text(md_0[out0], y=0.001, labels = (1:35)[out0], pos = 3, col = "green"))+
+  latticeExtra::layer(panel.text(md_1[out1], y=0.001, labels = (1:34)[out1], pos = 4, col = "blue"))
+```
+
+---
+
+**Comments**
+
+- There are a few outliers, but none of them is too potential, so we will keep them. 
+
+Now as univariate normality is established, we can go ahead to test multivariate normality.
+
+---
+
+## Multivariate Normality
+
+We test this assumption using graphical methods (gamma plots) and hypothesis testing (Henze-Zirkler test of multivariate normality). 
+
+---
+
+### Gamma Plots
+
+```{r Gamma Plot}
+d.tA =mahalanobis(tA[,-1],center=txbar,cov=S.tA,tol=1e-20)
+d.tB =mahalanobis(tB[,-1],center=tybar,cov=S.tA,tol=1e-20)
+
+# gamma plots
+
+par(mfrow=c(1,1))
+car::qqPlot(d.tA,"chisq",df=4,ylab="Mahalanobis distance of L. torrens",envelope=list(col="red",alpha=0.2),col.lines="red")
+
+car::qqPlot(d.tB,"chisq",df=4,ylab="Mahalanobis distance of L. carteri",envelope=list(col="red",alpha=0.2),col.lines="red")
+
+```
+
+---
+
+**comments** 
+For first group, gamma plots are not looking good enough to say that the data is multivariate normal.
+For second group, we can assume that the data is multivariate normal.
+Let's see if statistical tests are giving the same results.
+
+---
+
+## Henze-Zirkler test for Multivariate Normality
+
+```{r}
+HZ.test(tA[,-c(1)], qqplot = FALSE)
+```
+
+
+```{r}
+HZ.test(tB[,-c(1)], qqplot = FALSE)
+```
+
+**Comments**
+
+The statistical hypothesis testing shows that we are justified in assuming multivariate normality at 1% level of significance. So, we will assume the multivariate normality for transformed data for both the groups.
+
+---
+
+## Homogeneity of covariance matrices using Box_M Test
+
+Being done with Multivariate Normality, now we proceed to Test of Homogeneity of Covariance Matrices of the two Groups.
+
+$H_0 : \Sigma_1=\Sigma_2$ vs $H_1 : \Sigma_1 \ne \Sigma_2$
+
+```{r Box_M Test for Equality of Covariances, echo=TRUE}
+
+rstatix::box_m(transformed.flyr[, 2:8], transformed.flyr$Group)
+
+```
+
+**Comment** 
+
+- Box's M test fails to reject the hypothesis of homogeneity at $\alpha = 0.01$. 
+
+---
+
+## MANOVA
+
+With the assumptions of MANOVA satisfied, we can proceed with testing the equality of the two mean vectors.
+
+$H_0 : \mathbf{\mu_1} = \mathbf{\mu_2}$ vs $H_1 : \mathbf{\mu_1} \ne \mathbf{\mu_2}$
+
+```{r MANOVA, echo=TRUE}
+ 
+summary(manova(cbind(WL, WW, TPL, TPW, FPL, ASTW, ASTH)~Group, transformed.flyr))
+```
+
+**Comment**
+
+- As we had expected from EDA, we may reject the hypothesis that the two mean vectors are equal at $\alpha = 0.01$ (and indeed, any reasonable $\alpha$).
+
+---
+
+## ANOVA for individual variables
+
+Note that for comparing two populations, ANOVA is equivalent to a two-sample t-test (equal variances). 
+
+---
+
+### Wing Length
+
+```{r}
+summary(aov(WL ~ Group,data = transformed.flyr))
+```
+
+---
+
+### Wing Width
+
+```{r}
+summary(aov(WW ~ Group,data = transformed.flyr))
+```
+
+---
+
+### Third Palp Length
+
+```{r}
+summary(aov(TPL ~ Group,data = transformed.flyr))
+```
+
+---
+
+### Third Palp Width
+
+```{r}
+summary(aov(TPW ~ Group,data = transformed.flyr))
+```
+
+---
+
+### Fourth Palp Length
+
+```{r}
+summary(aov(FPL ~ Group,data = transformed.flyr))
+```
+
+---
+
+### Antennal Segment 12
+
+```{r}
+summary(aov(ASTW ~ Group,data = transformed.flyr))
+```
+
+---
+
+### Antennal Segment 13
+
+```{r}
+summary(aov(ASTH ~ Group ,data = transformed.flyr))
+```
+
+**Comments**
+
+- Wing length and Wing width are significantly different at $\alpha = 0.05$.
+
+- Third palp length and fourth palp length are significant even at $\alpha = 0.01$..
+
+The above results exactly match the results in the original 1975 analysis performed by Wiliam Atchley!
+
+---
+
+## Profile Analysis on Transformed Data
+
+### Assumptions
+
+1. All variables must be in similar units.
+2. Observations of different groups are independent.
+3. Variables of each group are distributed as multivariate normal with same covariance matrices.
+
+As all the above assumptions are satisfied for given data, we can proceed to test if the profiles are parallel.
+
+---
+
+### Hypothesis Testing 
+
+$H_0:$ Profiles are parallel.
+       i.e. $\mu_{1i}-\mu_{1i-1} = \mu_{2i}-\mu_{2i-1}; i=1,2,...,p.$
+
+$H_1:$ Profiles are not parallel.
+
+
+```{r, warning=FALSE }
+# Visualization
+
+means <- data.frame(variables = c(1,2,3,4,5,6,7),
+                    L_Torrens = as.vector(txbar),
+                    L_Carteri = as.vector(tybar))
+
+melt_means <- melt(means,id="variables")
+ggplot(data=means,aes(x=variables))+
+  geom_point(aes(y=L_Torrens,color="L_Torrens"),lwd=1)+
+  geom_point(aes(y=L_Carteri,color="L_Carteri"),lwd=1)+
+  geom_line(aes(y=L_Torrens,color="L_Torrens"),lwd=0.8)+
+  geom_line(aes(y=L_Carteri,color="L_Carteri"),lwd=0.8)+
+  scale_color_manual(name="Group",values=c("L_Torrens"="blue","L_Carteri"="green"))+
+  ylab("means")
+```
+
+
+\
+
+$\textbf{Decision:}$ Reject $H_0$ (parallel profile )at level $\alpha$ if
+$$T^2 = (\bar{x_1}-\bar{x_2})'C' \left[ \left( \frac{1}{n_1} + \frac{1}{n_2} \right) CS_{pooled}C' \right]^{-1} C (\bar{x_1}-\bar{x_2}) > c^2 $$
+\
+ where, $$c^2 = \frac{(n_1 + n_2 -2)(p-1)}{n_1+n_2-p} F_{p-1,n_1+n_2-p} (\alpha) $$
+
+```{r profile analysis, echo = TRUE}
+## Calculation of p_value
+n1=35
+n2=34
+p=7
+C = matrix(c(-1,1,0,0,0,0,0,
+             0,-1,1,0,0,0,0,
+             0,0,-1,1,0,0,0,
+             0,0,0,-1,1,0,0,
+             0,0,0,0,-1,1,0,
+             0,0,0,0,0,-1,1),
+             nrow=6,ncol=7,byrow=TRUE)
+S_pooled = 1/(n1+n2-2)*((n1-1)*S.tA+(n2-1)*S.tB)
+# Test statistic
+T_square = t( C %*% (txbar-tybar) ) %*% solve((1/n1+1/n2)* C %*% S_pooled %*% t(C)) %*% C %*% (txbar-tybar) 
+
+c_square = (n1+n2-2)*(p-1)/(n1+n2-p)
+p_value = pf (T_square/c_square,p-1,n1+n2-p, lower.tail = FALSE)
+print(p_value)
+
+
+```
+
+**Comments**
+
+The null hypothesis is rejected at $\alpha = 0.01$; i.e. the profiles are not parallel.
+
+---
+
+## Linear Discriminant Analysis
+
+
+```{r,include=FALSE}
+flyr<-fly[-36, ]
+transformed.flyr<-flyr
+
+
+boxcox(lm(data = flyr, WL~Group),lambda = seq(-2.5,7.5,1/10))
+# lambda = 2  (MLE)
+transformed.flyr$WL <- bcPower(flyr$WL,2)
+nor.test(WL~Group,data=transformed.flyr, plot=NULL, alpha=0.01)
+
+## wing width
+boxcox(lm(flyr$WW~flyr$Group),lambda = seq(-1,7,1/10))
+#lambda = 3
+transformed.flyr$WW = bcPower(flyr$WW, 3)
+nor.test(WW~Group,data=transformed.flyr,plot=NULL, alpha=0.01)
+
+## third palp length
+boxcox(lm(flyr$TPL~flyr$Group),lambda = seq(0,1,1/10))
+#lambda = 0.5
+transformed.flyr$TPL = bcPower(flyr$TPL,0.5)
+nor.test(TPL~Group,data=transformed.flyr,plot=NULL, alpha=0.01)
+
+## third palp width
+boxcox(lm(flyr$TPW~flyr$Group),lambda = seq(-2.5,7.5,1/10))
+# lambda =0
+transformed.flyr$TPW = bcPower(flyr$TPW,0)
+nor.test(TPW~Group,data=transformed.flyr,plot=NULL, alpha=0.01)
+
+#fourth palp length
+boxcox(lm(flyr$FPL~flyr$Group),lambda = seq(-2,2,1/10))
+# lambda =1
+
+#as12
+boxcox(lm(flyr$ASTW~flyr$Group),lambda = seq(-2.5,2.5,1/10))
+# lambda =1
+
+#as13
+boxcox(lm(flyr$ASTH~flyr$Group),lambda = seq(-2.5,2.5,1/10))
+# lambda =1
+
+set.seed(316)
+transformed.flyr$ASTW = transformed.flyr$ASTW + runif(nrow(flyr),-0.5, 0.5)
+transformed.flyr$ASTH = transformed.flyr$ASTW + runif(nrow(flyr),-0.5, 0.5)
+
+
+
+```
+
+```{r Confusion Matrix,echo=FALSE,include=FALSE}
+draw_confusion_matrix <- function(cm) {
+
+  
+  par(mar=c(2,2,2,2))
+  plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
+  title('Confusion Matrix', cex.main=2)
+
+  # create the matrix 
+  rect(150, 430, 240, 370, col='#3F97D0')
+  text(195, 435, 'L. torrens', cex=1.2)
+  rect(250, 430, 340, 370, col='#F7AD50')
+  text(295, 435, 'L. carteri', cex=1.2)
+  text(125, 370, 'Predicted', cex=1.3, srt=90, font=2)
+  text(245, 450, 'Actual', cex=1.3, font=2)
+  rect(150, 305, 240, 365, col='#F7AD50')
+  rect(250, 305, 340, 365, col='#3F97D0')
+  text(140, 400, 'L. torrens', cex=1.2, srt=90)
+  text(140, 335, 'L. carteri', cex=1.2, srt=90)
+
+  # add in the cm results 
+  res <- as.numeric(cm$table)
+  text(195, 400, res[1], cex=1.6, font=2, col='white')
+  text(195, 335, res[2], cex=1.6, font=2, col='white')
+  text(295, 400, res[3], cex=1.6, font=2, col='white')
+  text(295, 335, res[4], cex=1.6, font=2, col='white')
+
+  
+}  
+```
+
+```{r,include=FALSE}
+flyr<-fly[-36, ]
+transformed.flyr<-flyr
+
+
+boxcox(lm(data = flyr, WL~Group),lambda = seq(-2.5,7.5,1/10))
+# lambda = 2  (MLE)
+transformed.flyr$WL <- bcPower(flyr$WL,2)
+nor.test(WL~Group,data=transformed.flyr, plot=NULL, alpha=0.01)
+
+## wing width
+boxcox(lm(flyr$WW~flyr$Group),lambda = seq(-1,7,1/10))
+#lambda = 3
+transformed.flyr$WW = bcPower(flyr$WW, 3)
+nor.test(WW~Group,data=transformed.flyr,plot=NULL, alpha=0.01)
+
+## third palp length
+boxcox(lm(flyr$TPL~flyr$Group),lambda = seq(0,1,1/10))
+#lambda = 0.5
+transformed.flyr$TPL = bcPower(flyr$TPL,0.5)
+nor.test(TPL~Group,data=transformed.flyr,plot=NULL, alpha=0.01)
+
+## third palp width
+boxcox(lm(flyr$TPW~flyr$Group),lambda = seq(-2.5,7.5,1/10))
+# lambda =0
+transformed.flyr$TPW = bcPower(flyr$TPW,0)
+nor.test(TPW~Group,data=transformed.flyr,plot=NULL, alpha=0.01)
+
+#fourth palp length
+boxcox(lm(flyr$FPL~flyr$Group),lambda = seq(-2,2,1/10))
+# lambda =1
+
+#as12
+boxcox(lm(flyr$ASTW~flyr$Group),lambda = seq(-2.5,2.5,1/10))
+# lambda =1
+
+#as13
+boxcox(lm(flyr$ASTH~flyr$Group),lambda = seq(-2.5,2.5,1/10))
+# lambda =1
+
+set.seed(316)
+transformed.flyr$ASTW = transformed.flyr$ASTW + runif(nrow(flyr),-0.5, 0.5)
+transformed.flyr$ASTH = transformed.flyr$ASTW + runif(nrow(flyr),-0.5, 0.5)
+```
+
+---
+
+### Assumptions 
+
+We have assumed that 
+
+- Prior probabilities for each of the 2 groups are same.
+\newline
+- Each group incurs equal cost of misclassifications. 
+
+We have already shown that 
+
+- Transformed data is multivariate normal at 1% level of significance using **Henze-Zirkler test**. 
+
+- Covariance matrices for different group are same at 1% level of significance using **Box-M test**. 
+
+Since all assumptions are satisfied, we'll use the LDA the transformed data in two different ways:
+
+1) By splitting data into training and testing sets  
+
+2) Using Leave one out cross validation. 
+
+---
+
+## Train-Test
+
+```{r, echo=T}
+set.seed(123)
+training.individuals <- transformed.flyr$Group %>% caret::createDataPartition(p = 0.8, list = FALSE)
+train.data <- transformed.flyr[training.individuals, ]
+test.data <- transformed.flyr[-training.individuals, ]
+```
+
+- Applying LDA model using inbuilt R function
+
+```{r,echo=TRUE,highlight=TRUE}
+model.lda <- lda(Group~., data = train.data)
+model.lda
+```
+
+
+--- 
+
+### LDA Score Plot (1-dimensional) 
+
+```{r,echo=FALSE,out.width="80%",out.height="60%",fig.align='center'}
+pred.train.lda.class <-  predict(model.lda, train.data)$class
+pred.test.lda <- model.lda %>% predict(test.data)
+accuracy.lda = mean(pred.test.lda$class==test.data$Group)
+
+
+#define data to plot
+lda_plot <- cbind(train.data, predict(model.lda)$x)
+
+
+#1-D plot 
+ggplot(data.frame(lda_plot), aes(x=LD1, y=0)) + geom_point(aes(color=Group),size = 2)+ theme(panel.background = element_blank(),axis.ticks=element_blank())+ylim(-0.0005,0.0005)+theme_bw()+ggtitle("1-D LDA Score Plot")
+
+```
+
+---
+
+## Confusion matrix 
+
+#### Confusion matrix on training data
+```{r,echo=FALSE}
+
+# On training data
+confusion.lda.train = confusionMatrix(as.factor(pred.train.lda.class),as.factor(train.data$Group))
+draw_confusion_matrix(confusion.lda.train)
+
+```
+
+**Comment** On training data set, APER (misclassification rate) of LDA is about 14%.
+
+#### Confusion matrix based on testing data
+```{r,echo=FALSE}
+#On testing data
+confusion.lda.test = confusionMatrix(as.factor(pred.test.lda$class),as.factor(test.data$Group))
+draw_confusion_matrix(confusion.lda.test)
+```
+
+**Comment**:  On testing data set, misclassification rate of LDA is about 23%.
+
+---
+
+## Cross-Validation 
+
+#### Confusion Matrix
+
+```{r,echo=FALSE}
+LDA_trans= 1:69 #a vector of length 69
+pred.cross.lda.class =1:69
+for( i in 1:69){
+  train.data <- transformed.flyr[-i, ]
+  test.data <- transformed.flyr[i, ]
+  model <- lda(Group~., data = train.data)
+  predictions <- model %>% predict(test.data)
+  
+  pred.cross.lda.class[i]=as.integer(predictions$class)-1
+  if (predictions$class==test.data$Group) LDA_trans[i]= 1
+  else LDA_trans[i]=0
+}
+
+confusion.lda.cross = confusionMatrix(as.factor(pred.cross.lda.class),as.factor(transformed.flyr$Group))
+draw_confusion_matrix(confusion.lda.cross)
+```
+
+```{r}
+1-mean(LDA_trans)
+```
+**Comments**:
+
+- $\hat{\mathbb{E}}[AER]$ = 0.23
+
+- $\hat{\mathbb{P}}[L. torrens|L. carteri]$ = 10/34 = 0.235
+
+- $\hat{\mathbb{P}}[L. carteri|L. torrens]$ = 6/35 = 0.171
+
+## Quadratic Discriminant Analysis
+
+- For comparison, we may also use quadratic discriminant analysis. 
+
+- Confusion matrix obtained from cross validation method
+
+```{r,echo= FALSE}
+
+QDA_trans= 1:69 #a vector of length 70
+pred.class.qda = 1:69
+for( i in 1:69){
+  train.data <- transformed.flyr[-i, ]
+  test.data <- transformed.flyr[i, ]
+  model <- qda(Group~., data = train.data)
+  predictions <- model %>% predict(test.data)
+  pred.class.qda[i] <- as.integer(predictions$class)-1
+  if (predictions$class==test.data$Group) QDA_trans[i] = 1
+  else QDA_trans[i]=0
+}
+
+confusion.qda.cross=confusionMatrix(as.factor(pred.class.qda),as.factor(transformed.flyr$Group))
+
+draw_confusion_matrix(confusion.qda.cross)
+```
+
+
+```{r,echo=FALSE}
+1-mean(QDA_trans)
+```
+
+
+**Comments**
+
+ $\hat{\mathbb{E}}[AER]$ = 17/69 = 0.25 
+ 
+ $\hat{\mathbb{P}}[L. torrens|L. carteri]$ = 8/34 = 0.236
+ 
+ 
+ $\hat{\mathbb{P}}[L. carteri|L. torrens]$ = 9/35 = 0.257
+
+Both LDA and QDA have more or less same mis-classification rate but performance is not much satisfactory.
+
+--- 
+
+## KNN 
+
+- KNN is an algorithm for classifying a new data point to predefined clusters.
+
+- The algorithm begins with the training data set, which consists of labeled data points (also known as instances) in the feature space.
+
+- When given a new, unlabeled data point, the algorithm looks for the K-nearest points in the training set to the new point based on a distance metric, such as Euclidean distance or Manhattan distance.
+
+- The K-nearest points are identified, and the label of the new point is assigned based on the majority label of those K-nearest points. For example, if K=3 and two of the nearest neighbors have a label of "A" and one has a label of "B", then the new point would be classified as "A". (in case of a tie it picks the label by tossing a coin.)
+
+---
+
+## Normalisation
+
+Before applying KNN, data should be normalized. This ensures that each feature has the same influence on the distance calculation and prevents the KNN algorithm from being biased towards certain features. 
+
+
+```{r,echo=TRUE}
+#Normalization
+normalize <- function(x) {
+return ((x - min(x)) / (max(x) - min(x))) }
+normlized.df <- as.data.frame(lapply(flyr[,2:8], normalize))
+
+```
+
+---
+
+## Confusion Matrix
+
+- The data is divided into training and testing sets in the ratio 80:20. KNN algorithm is run using k = 5; this choice was made following cross-validation. 
+
+```{r,echo=F}
+
+dat.d <- sample(1:nrow(normlized.df),size=nrow(normlized.df)*0.8,replace = FALSE)
+#random selection of 80% data.
+
+train.data <- as.data.frame(flyr[dat.d,2:8 ])
+test.data <- as.data.frame(flyr[-dat.d,2:8 ])
+
+train.labels <- as.vector(flyr[dat.d,1])
+test.labels <- as.vector(flyr[-dat.d,1])
+```
+
+
+```{r,echo=F}
+knn.train.labels<- knn(train=train.data, test=train.data, cl=train.labels, k=5)
+knn.test.labels <- knn(train=train.data, test=test.data, cl=train.labels, k=5)
+```
+
+
+```{r,echo=F,include=TRUE}
+confusion.knn.train = confusionMatrix(as.factor(knn.train.labels),as.factor(train.labels))
+confusion.knn.test = confusionMatrix(as.factor(knn.test.labels),as.factor(test.labels))
+
+
+draw_confusion_matrix(confusion.knn.train)
+draw_confusion_matrix(confusion.knn.test)
+```
+
+**Comment** 
+
+On training data set, the misclassification rate) of KNN is about 3%.
+
+On testing data set, the misclassification rate of KNN is about 21%.
+
+---
+
+### Cross-Validation
+
+```{r,echo = FALSE }
+set.seed(123)
+ACC= matrix(0,nrow=10,ncol=69)
+knn.cross.labels= matrix(0,nrow=69,ncol=10)
+
+for (j in 1:10){
+  for( i in 1:69){
+  train.data <- as.data.frame(flyr[-i,2:8 ])
+  test.data <- as.data.frame(flyr[i,2:8 ])
+  
+  train.labels <- as.vector(flyr[-i,1])
+  test.labels <- as.vector(flyr[i,1])
+  
+  knn.j <- knn(train=train.data, test=test.data, cl=train.labels, k=j)
+  knn.cross.labels[i,j] <- knn.j
+  
+  ACC[j,i] <-  test.labels == knn.j
+
+  }
+}
+
+```
+
+
+#### Estimated AER for k=1,2,...,10
+
+```{r,echo=TRUE,include=TRUE}
+confusion.knn.cross =list()
+for( i in 1:10){
+  confusion.knn.cross[[i]] = confusionMatrix(data=as.factor(as.integer(knn.cross.labels[,i])-1),reference=as.factor(flyr$Group))
+}
+
+
+knn.aer=matrix(0,nrow=10,ncol=1)
+rownames(knn.aer) = c("k=1","k=2","k=3","k=4","k=5","k=6","k=7","k=8","k=9","k=10")
+colnames(knn.aer) = c("Estimate of E[AER]")
+for( i in 1:10) knn.aer[i,1]=round(1-confusion.knn.cross[[i]]$overall[1],3)
+
+#Estimate of AER of KNN for different values of k
+knn.aer %>% 
+  knitr::kable(format = "html")
+
+
+```
+
+**Comment**   For k=5, estimate of AER for KNN is approximately 0.09 which is better than that of LDA. 
+
+---
+
+## Confusion Matrix for k=5
+
+```{r,echo=TRUE,include=TRUE}
+draw_confusion_matrix(confusion.knn.cross[[5]])
+
+```
+
+**Comment** 
+
+$\hat{\mathbb{E}}[AER]$ = 6/69 = 0.087
+
+$\hat{\mathbb{P}}[L. torrens|L. carteri]$ = 6/34 = 0.176
+
+$\hat{\mathbb{P}}[L. carteri|L. torrens]$ = 0/35 = 0
+
+---
+
+## Logistic Regression
+
+Because it is difficult to establish the assumptions of multivariate normality and homogeneous covarances for this dataset, we may approach the classification problem in a different way. Logistic regression offers a method of classifying the observations without requiring too many assumptions on the data. 
+
+The key assumptions under binary logistic regression are independence of observations and a binary dependent variable, both of which are satisfied by our data. 
+
+We will run logistic regression followed by leave-one-out cross-validation to verify the results.
+
+## Total Misclassification Rate
+
+```{r, echo= T}
+ma_model <- glm(Group~., family = binomial(link = "logit"), data=fly)
+errvec<-rep(0, 70)
+for (i in 1:nrow(fly)){
+errvec[i]<-(predict(ma_model, fly[i, -1], type = "response")>0.5)
+}
+sum(errvec!=fly[, 1])/nrow(fly)
+```
+
+- Using all the data points, about 90% of the dataset is correctly classified.
+
+---
+
+## Leave-One-Out Cross Validation
+
+```{r LOOCV}
+errvec<-rep(0, nrow(fly))
+
+for (i in 1:nrow(fly)){
+  model<-glm(Group~., family = binomial(link = "logit"), data=fly[-i, ])
+  errvec[i]<-(predict(model, fly[i, -1], type = "response")>0.5)
+}
+
+sum(errvec!=fly[, 1])/nrow(fly)
+```
+
+- Logistic regression is able to successfully classify 85% of the data. 
+
+---
+
+## Conclusions
+
+1) Our first goal was to verify the results of the original analysis. This goal has borne rich fruit. Our analysis found  significant differences between the mean vectors of the features of the two species. Moreover, significant differences were found in wing length, wing width, third palp length, and fourth palp length—which was exactly what the original 1975 analysis had found!
+
+2) We performed classification using three different techniques: LDA, KNN, and binary logistic regression. All of these techniques yielded very satisfactory results. 
+
+3) We also performed a principal components analysis and a PC factor analysis on the data. Two principal components alone explain most of the variation in the data. Moreover, the factor analysis after a varimax rotation yields a very meaningful, interpretable result: the latent factors in the data are the "non-antennal measurements" and the "antennal measurements".
+
+--
+
+## Appendix
+
+We are heavily indebted to the original data analysis by William Atchley, which we shall enclose.  
+
+For further information on the HZ test of hypothesis, see [here](https://journal.r-project.org/archive/2014-2/korkmaz-goksuluk-zararsiz.pdf). 
