@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        /* General Page Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        /* Navigation Bar */
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            width: 100%;
+        }
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+        .navbar a:hover {
+            background-color: #575757;
+        }
+        .navbar-right {
+            float: right;
+        }
+        /* Hero Section */
+        .hero {
+            background-image: url('./images/isid.jpeg');
+            background-size: cover;
+            padding: 60px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .hero img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+        }
+        .hero-text {
+            max-width: 600px;
+        }
+        /* Projects Section */
+        .projects {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 40px 20px;
+        }
+        .project-card {
+            background-color: #f9f9f9;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 8px;
+            width: calc(33.33% - 40px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .project-card img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+        .project-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        /* Footer Section */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="#about">More About Me</a>
+        <a href="#career">Academic Career</a>
+        <a href="#random">Random Stuff</a>
+        <div class="navbar-right">
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="about">
+        <div class="hero-text">
+            <h1>Hello, I'm Yash</h1>
+            <p>A brief introduction about yourself goes here. This section describes who you are, what you do, and what you're passionate about. Keep it short and engaging.</p>
+        </div>
+        <img src="./images/Yash_Gupta.jpeg" alt="Yash Gupta">
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projects">
+        <div class="project-card">
+            <img src="./images/goldsilver.png" alt="Biting Fly Data Analysis (Supervised ML)">
+            <h3>Biting Fly Data Analysis (Supervised ML)</h3>
+            <p>• Applied Box-Cox Transformation for skewed predictor variables with an appropriate choice of tuning parameter.
+                • Performed Logistic Regression Model on the data to enhance prediction accuracy.
+                • Employed Supervised Machine Learning algorithms like LDA, QDA & KNN.
+                • Reduced the dimension of feature space using Principal Component Analysis</p>
+            <a href="./Biting Fly Data Analysis (Supervised ML)/index.html">View Project</a>
+        </div>
+        <div class="project-card">
+            <img src="./images/goldsilver.png" alt="Cointegrated Processes">
+            <h3>Cointegrated Processes</h3>
+            <p>• Applied Box-Cox Transformation for skewed predictor variables with an appropriate choice of tuning parameter.
+                • Performed Logistic Regression Model on the data to enhance prediction accuracy.
+                • Employed Supervised Machine Learning algorithms like LDA, QDA & KNN.
+                • Reduced the dimension of feature space using Principal Component Analysis</p>
+            <a href="./Cointegrated Processes/index.html">View Project</a>
+        </div>
+        <!-- Add more projects similarly -->
+    </section>
+
+    <!-- Footer Section -->
+    <footer id="contact">
+        <p>Get in touch: 
+            <a href="mailto:your-email@example.com">Email</a> | 
+            <a href="https://www.linkedin.com/in/your-profile" target="_blank">LinkedIn</a> | 
+            <a href="https://github.com/your-username" target="_blank">GitHub</a>
+        </p>
+    </footer>
+
+</body>
+</html>
