@@ -415,10 +415,15 @@ knitr::include_graphics("Image-Yash/savage under all dist.jpg")
 
 ### Parametric Counterpart of Capon and Savage test                                                                                                                                                                                                                                                                                                                                                                                          
 - First Parametric counterpart for this hypothesis that would come in mind is F test:  
- $$F = \frac{{\sum_{i=1}^n X_i^2}/n}{{\sum_{j=1}^m Y_j^2}/m}$$                        
+{% raw %}
+ $$F = \frac{{\sum_{i=1}^n X_i^2}/n}{{\sum_{j=1}^m Y_j^2}/m}$$ 
+ {% endraw %}
 - Under $H_0$, F follows $F_{(n,m)}$ - distribution                                                 
 - Similarly, parametric counterpart for Savage statistics( parent population : Exponential) is  
+
+{% raw %}
 $$E = \frac{{\sum_{i=1}^n X_i}/n}{{\sum_{j=1}^m Y_j}/m}$$
+{% endraw %}
 - Under $H_0$, $\text{E}$ follows $F_{(2n,2m)}$ - distribution
 
 ---
