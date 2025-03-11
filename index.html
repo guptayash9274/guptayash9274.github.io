@@ -1,145 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
-    <style>
-        /* General Page Styles */
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-        /* Navigation Bar */
-        .navbar {
-            background-color: #333;
-            overflow: hidden;
-            padding: 10px 20px;
-            position: sticky;
-            top: 0;
-            width: 100%;
-        }
-        .navbar a {
-            color: white;
-            padding: 14px 20px;
-            text-decoration: none;
-            text-align: center;
-        }
-        .navbar a:hover {
-            background-color: #575757;
-        }
-        .navbar-right {
-            float: right;
-        }
-        /* Hero Section */
-        .hero {
-            background-image: url('./images/isid.jpeg');
-            background-size: cover;
-            padding: 60px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .hero img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-        }
-        .hero-text {
-            max-width: 600px;
-        }
-        /* Projects Section */
-        .projects {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 40px 20px;
-        }
-        .project-card {
-            background-color: #f9f9f9;
-            margin: 10px;
-            padding: 20px;
-            border-radius: 8px;
-            width: calc(33.33% - 40px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .project-card img {
-            max-width: 100px;
-            margin-bottom: 10px;
-        }
-        .project-card:hover {
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-        /* Footer Section */
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yash Gupta</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      margin: 40px auto;
+      max-width: 800px;
+      padding: 0 20px;
+      color: #333;
+    }
+
+    /* Styling for the text container */
+    .text-container {
+      max-width: 800px; /* Max width for better readability */
+      margin: 0 auto; /* Centers the container on the page */
+      padding: 20px;
+    }
+
+    p {
+      text-align: justify; /* Ensures the text is justified with both left and right edges aligned */
+      margin-bottom: 20px; /* Adds space between paragraphs */
+      text-justify: inter-word; /* Controls how the spacing is handled between words */
+      line-height: 1.6; /* Adjust line height for better readability */
+    }
+
+
+    .quarto-about-trestles {
+      display: flex;
+      gap: 40px;
+      margin-top: 30px;
+    }
+
+    .about-entity {
+      width: 35%;
+      margin-top: 20px;
+    }
+
+    .about-image {
+      width: 100%;
+      height: auto;
+      margin-bottom: 25px;
+      border-radius: 4px;
+    }
+
+    .quarto-title {
+      margin-bottom: 5px;
+      margin-top: -25px;
+    }
+
+    .quarto-title h1 {
+      font-size: 2.2rem;
+      margin: 0;
+    }
+
+    .about-links {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .about-link {
+      color: #333;
+      text-decoration: none;
+      padding: 8px 12px;
+      border: 1px solid #eaeaea;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      min-height: 40px;
+    }
+
+    .about-link:hover {
+      border-color: #0074D9;
+      background: #f8f9ff;
+      transform: translateY(-2px);
+    }
+
+    .about-link-text {
+      font-weight: 500;
+    }
+
+    .about-contents {
+      flex: 1;
+    }
+
+    .about-contents p {
+      margin-bottom: 1.2em;
+    }
+
+    .about-contents ul {
+      padding-left: 20px;
+      margin-bottom: 1.2em;
+    }
+
+    .about-contents li {
+      margin-bottom: 0.5em;
+    }
+
+    @media (max-width: 768px) {
+      .quarto-about-trestles {
+        flex-direction: column;
+      }
+      .about-entity {
+        width: 100%;
+      }
+      .about-links {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .about-links {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-
-    <!-- Navigation Bar -->
-    <div class="navbar">
-        <a href="#about">More About Me</a>
-        <a href="#career">Academic Career</a>
-        <a href="#random">Random Stuff</a>
-        <div class="navbar-right">
-            <a href="#contact">Contact</a>
-        </div>
+  <div class="quarto-about-trestles">
+    <div class="about-entity">
+      <img src="assets/yash3.jpg" class="about-image" alt="Yash">
+      <div class="quarto-title">
+        <h1>Yash Gupta</h1>
+      </div>
+      <div class="about-links">
+        <a href="https://github.com/guptayash9274" class="about-link">
+          <span class="about-link-text">GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/yash-gupta-764337194/" class="about-link">
+          <span class="about-link-text">LinkedIn</span>
+        </a>
+        <a href="assets/Resume_Yash_Gupta.pdf" class="about-link">
+          <span class="about-link-text">Resume</span>
+        </a>
+        <a href="projects.html" class="about-link">
+          <span class="about-link-text">Projects</span>
+        </a>
+      </div>
     </div>
+    <div class="about-contents">
+      <p>Hi! I am Yash Gupta, a data professional, a statistician and a curious learner. I hold a <strong>Master's Degree in Computational Statistics </strong> from <strong>Indian Statistical Institute, Kolkata</strong>, and a <strong>Bachelor’s in Statistics</strong> from <strong>Banaras Hindu University</strong>.</p>
 
-    <!-- Hero Section -->
-    <section class="hero" id="about">
-        <div class="hero-text">
-            <h1>Hello, I'm Yash</h1>
-            <p>A brief introduction about yourself goes here. This section describes who you are, what you do, and what you're passionate about. Keep it short and engaging.</p>
-        </div>
-        <img src="./images/Yash_Gupta.jpeg" alt="Yash Gupta">
-    </section>
+      <p>Currently, I work as an Analyst - Data and Analytics at HSBC, where I build predictive models, and create automated solutions that improve business processes and customer experiences.</p>
 
-    <!-- Projects Section -->
-    <section class="projects" id="projects">
-        <div class="project-card">
-            <img src="./images/goldsilver.png" alt="Biting Fly Data Analysis (Supervised ML)">
-            <h3>Biting Fly Data Analysis (Supervised ML)</h3>
-            <p>• Applied Box-Cox Transformation for skewed predictor variables with an appropriate choice of tuning parameter.
-                • Performed Logistic Regression Model on the data to enhance prediction accuracy.
-                • Employed Supervised Machine Learning algorithms like LDA, QDA & KNN.
-                • Reduced the dimension of feature space using Principal Component Analysis</p>
-            <a href="./Biting Fly Data Analysis (Supervised ML)/index.html">View Project</a>
-        </div>
-        <div class="project-card">
-            <img src="./images/goldsilver.png" alt="Cointegrated Processes">
-            <h3>Cointegrated Processes</h3>
-            <p>• Applied Box-Cox Transformation for skewed predictor variables with an appropriate choice of tuning parameter.
-                • Performed Logistic Regression Model on the data to enhance prediction accuracy.
-                • Employed Supervised Machine Learning algorithms like LDA, QDA & KNN.
-                • Reduced the dimension of feature space using Principal Component Analysis</p>
-            <a href="./Cointegrated Processes/index.html">View Project</a>
-        </div>
-        <div class="project-card">
-            <img src="./images/goldsilver.png" alt="LMP Rank Tests for Scale  - Non Parametric Inference">
-            <h3>LMP Rank Tests for Scale  - Non Parametric Inference</h3>
-            <p>• Developed new tests by modifying Median, WRS and Mann-Whitney tests to test difference in scale parameters.
-                • Analyzed performance of Capon, Klotz and Mood test statistics.</p>
-            <a href="./LMP Rank Tests for Scale  - Non Parametric Inference/index.html">View Project</a>
-        </div>
-        <!-- Add more projects similarly -->
-    </section>
+      <p>I’m particularly interested in Statistical Modeling, Machine Learning and Econometrics. Recently, I have been focusing more on learning about <strong>Causal Infernece, A/B Testing and Desgning Robust Experiments</strong>. I want to become a Data Scientist in related area.</p>
 
-    <!-- Footer Section -->
-    <footer id="contact">
-        <p>Get in touch: 
-            <a href="mailto:guptayash1204@gmail.com">Email</a> | 
-            <a href="https://www.linkedin.com/in/yash-gupta-764337194/" target="_blank">LinkedIn</a> | 
-            <a href="https://github.com/guptayash9274/" target="_blank">GitHub</a>
-        </p>
-    </footer>
+      <p>Apart from study, I like solving puzzles, watching movies, traveling and reading blogs.</p>
 
+      <p>I’m always excited to connect with like-minded individuals and explore how data can create value. </p>
+
+    </div>
+  </div>
+  <!-- <ul>
+    <li><strong>Simulation Study on Non-Parametric LMPR Tests for Scale</strong>: This is a group project in contribution with Saransh Gupta and Rohan P. Shinde. We have extensively performed simulation to study the behaviour of the Locally Most Powerful Rank Tests for Scale Parameter. Additionally, we have derived Test Statistics for specific distributions as well as new Non Parametric tests to test the significance of the scale parameter  by improvising on the already existing tests for location parameters.</li>
+    <li><strong>Biting Fly Data Analysis (Supervised ML)</strong>: This is a course project with collaboration with Aditya Negi and harsh Gupta. The goal of this project was to practically apply the cocepts of Multivariate Anaysis on a small dataset. We used classical ML algorithms like LDA, QDA, Logistic Regression to classify the two groups of fly based on their biolgocal characteristics.</li>
+    <li><strong>Cointegration Processes Presentation</strong>: A short presentation emphasisng the importance of Cointegration in Ecomotrics.</li>
+    <li><strong>Presentation of Non Linear Dimensionality Reduction Techniques</strong>: In collaboration with Sampurna Mondal and Rohan P. Shinde, we discussed about algorithms, advantages and disadvantages of popular High Dimnesioanlity Reduction Techniques like Kernalized PCA, IsoMap, Local Linear Embedding, Diffusion Maps and t-SNE.</li>
+    <li><strong>Regression Analysis for Prediction of Health Insurance Premium Cost</strong>: This was my first course project in Masters where I applied various Regression Techniques specially Robust Regression (Loss Functions : Huber, Bi-Square) and Resistant Regression. I compared the performance of these methods with Linear Regression over Health Insurance Dataset which is quite sparse in nature. </li>
+  </ul> -->
 </body>
 </html>

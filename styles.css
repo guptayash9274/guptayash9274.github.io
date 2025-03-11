@@ -1,0 +1,92 @@
+/* Exact replica of hadley.nz styling */
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    margin: 40px auto;
+    max-width: 1000px;
+    padding: 0 20px;
+    color: #333;
+  }
+  
+  .container {
+    display: flex;
+    gap: 40px;
+  }
+  
+  .left-column {
+    width: 350px;
+    flex-shrink: 0;
+  }
+  
+  .profile-photo {
+    width: 350px;
+    height: auto;
+    border-radius: 0; /* Hadley's photo isn't circular */
+  }
+  
+  .social-links {
+    margin-top: 20px;
+    font-size: 15px;
+  }
+  
+  .social-links a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .social-links a:hover {
+    text-decoration: underline;
+  }
+  
+  .right-column {
+    flex-grow: 1;
+  }
+  
+  .right-column p {
+    margin: 0 0 1em 0;
+  }
+  
+  .right-column ul {
+    padding-left: 20px;
+    margin: 0 0 1em 0;
+  }
+  
+  .right-column li {
+    margin: 5px 0;
+    list-style-type: none; /* No bullets */
+  }
+  
+  .right-column strong {
+    font-weight: 500; /* Semi-bold titles like Hadley's */
+  }
+  
+  .right-column a {
+    color: #0645AD; /* Classic blue link color */
+    text-decoration: none;
+  }
+  
+  .right-column a:hover {
+    text-decoration: underline;
+  }
+
+  /* Add to existing CSS */
+a {
+    transition: color 0.2s;
+  }
+  
+  .profile-photo {
+    transition: transform 2.3s;
+  }
+  
+  .profile-photo:hover {
+    transform: rotate(0deg) scale(4);
+  }
+
+  .dark-mode {
+    background: #1a1a1a;
+    color: white;
+  }
+  
+  .dark-mode a {
+    color: #7FDBFF;
+  }

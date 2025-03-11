@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Yash</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .projects-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+
+        /* Project Grid */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        /* Flip Card */
+        .flip-card {
+            perspective: 1000px;
+            height: 400px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+
+        /* Card Sides */
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Front Side */
+        .flip-card-front {
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Back Side */
+        .flip-card-back {
+            background-color: #ffffff;
+            transform: rotateY(180deg);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .project-description {
+            flex-grow: 1;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .project-link {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .link-icon {
+            color: #0074D9;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .link-icon:hover {
+            transform: scale(1.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flip-card {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="projects-container">
+        <div class="project-grid">
+            <!-- Project 1 -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front"> 
+                        <img src="assets/Project1.jpg" alt="Simulation Study" class="project-image">
+                    </div>
+                    <div class="flip-card-back">
+                        <h3 class="project-title">Simulation Study on Non-Parametric LMPR Tests for Scale</h3>
+                        <p class="project-description">
+                            This is a group project in contribution with Saransh Gupta and Rohan P. Shinde. We have extensively performed
+                            simulation to study the behaviour of the Locally Most Powerful Rank Tests for Scale Parameter. Additionally,
+                            we have derived Test Statistics for specific distributions as well as new Non Parametric tests to test the
+                            significance of the scale parameter  by improvising on the already existing tests for location parameters.
+                        </p>
+                        <div class="project-link">
+                            <a href="LMP Rank Tests for Scale  - Non Parametric Inference/index.html" class="link-icon">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="assets/Project2.jpg" alt="Fly Analysis" class="project-image">
+                    </div>
+                    <div class="flip-card-back">
+                        <h3 class="project-title">Biting Fly Data Analysis (Supervised ML)</h3>
+                        <p class="project-description">
+                            This is a course project with collaboration with Aditya Negi and harsh Gupta. The goal of this project was to
+                            practically apply the cocepts of Multivariate Anaysis on a small dataset. We used classical ML algorithms like
+                            LDA, QDA, Logistic Regression to classify the two groups of fly based on their biological characteristics.
+                        </p>
+                        <div class="project-link">
+                            <a href="Biting Fly Data Analysis (Supervised ML)/index.html" class="link-icon">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add other projects following the same structure -->
+
+            <!-- Project 3 -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="assets/hdi.jpg" alt="Non Linear Dimensionality Reduction" class="project-image">
+                    </div>
+                    <div class="flip-card-back">
+                        <h3 class="project-title">Non Linear Dimensionality Reduction Techniques</h3>
+                        <p class="project-description">
+                            In collaboration with Sampurna Mondal and Rohan P. Shinde, we discussed about algorithms, advantages and 
+                            disadvantages of popular High Dimnesioanlity Reduction Techniques like Kernalized PCA, IsoMap, Local 
+                            Linear Embedding, Diffusion Maps and t-SNE.
+                        </p>
+                        <div class="project-link">
+                            <a href="Non Linear Dimensionality Reduction Techniques/Presentation.pdf" class="link-icon">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Project 4 -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="assets/goldsilver.jpg" alt="Cointegration Processes" class="project-image">
+                    </div>
+                    <div class="flip-card-back">
+                        <h3 class="project-title">Cointegration Processes Presentation</h3>
+                        <p class="project-description">
+                            A short presentation emphasisng the importance of Cointegration in Econometrics.
+                        </p>
+                        <div class="project-link">
+                            <a href="Cointegrated Processes/index.html" class="link-icon">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
