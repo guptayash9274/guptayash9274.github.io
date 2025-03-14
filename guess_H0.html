@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hypothesis Testing Game</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --danger-color: #c0392b;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: var(--background-gradient);
+            min-height: 100vh;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        #plot {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .control-panel {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .decision-buttons {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        button {
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .accept-btn {
+            background: green;
+            color: white;
+        }
+
+        .reject-btn {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .generate-btn {
+            background: var(--primary-color);
+            color: white;
+            width: 100%;
+        }
+
+        .result-display {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hotelling's T² Hypothesis Test</h1>
+    <div class="game-container">
+        <div id="plot"></div>
+        <div class="control-panel">
+            <div class="stat-card">
+                <h3>Test Parameters</h3>
+                <p>α = 0.05</p>
+                <p>Population: Bivariate Normal</p>
+                <p>H₀: μ = (<span id="h0MeanX">0</span>, <span id="h0MeanY">0</span>)</p>
+            </div>
+            
+            <button class="generate-btn" onclick="generateNewSample()">
+                Generate Sample
+            </button>
+
+            <div class="decision-buttons">
+                <button class="accept-btn" onclick="submitDecision(true)">Accept H₀</button>
+                <button class="reject-btn" onclick="submitDecision(false)">Reject H₀</button>
+            </div>
+
+            <div class="result-display" id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        let trueMean = [0, 0];
+        let h0Mean = [0, 0];
+        let sampleData = [];
+        let covarianceMatrix = [[1, 0], [0, 1]];
+
+        function generateBivariateNormal(mean, cov, n=30) {
+            const data = [];
+            for(let i=0; i<n; i++) {
+                const z1 = Math.sqrt(-2*Math.log(Math.random())) * Math.cos(2*Math.PI*Math.random());
+                const z2 = Math.sqrt(-2*Math.log(Math.random())) * Math.sin(2*Math.PI*Math.random());
+                
+                const x = mean[0] + cov[0][0]*z1 + cov[0][1]*z2;
+                const y = mean[1] + cov[1][0]*z1 + cov[1][1]*z2;
+                
+                data.push({x, y});
+            }
+            return data;
+        }
+
+        function hotellingT2(sample, mu0) {
+            const n = sample.length;
+            const p = 2; // Dimensions
+            
+            // Sample mean
+            const xBar = [
+                sample.reduce((sum, p) => sum + p.x, 0)/n,
+                sample.reduce((sum, p) => sum + p.y, 0)/n
+            ];
+            
+            // Sample covariance
+            let S = [[0,0],[0,0]];
+            sample.forEach(p => {
+                S[0][0] += (p.x - xBar[0])**2;
+                S[0][1] += (p.x - xBar[0])*(p.y - xBar[1]);
+                S[1][1] += (p.y - xBar[1])**2;
+            });
+            S = S.map(row => row.map(val => val/(n-1)));
+            
+            // T² statistic
+            const diff = [xBar[0]-mu0[0], xBar[1]-mu0[1]];
+            const invS = math.inv(S);
+            const T2 = n * math.multiply(math.transpose(diff), math.multiply(invS, diff));
+            
+            // F-distribution critical value
+            const Fcrit = (n - p) / (p * (n - 1)) * jStat.centralF.inv(1 - 0.05, p, n - p);
+            
+            return {T2, Fcrit, rejected: T2 > Fcrit};
+        }
+
+        function updatePlot(data) {
+            const trace = {
+                x: data.map(d => d.x),
+                y: data.map(d => d.y),
+                mode: 'markers',
+                type: 'scatter',
+                marker: {
+                    size: 8,
+                    color: 'var(--primary-color)', // Fixed CSS variable reference
+                    opacity: 0.7
+                }
+            };
+
+            const layout = {
+                title: 'Sample Distribution',
+                xaxis: {title: 'X Variable'},
+                yaxis: {title: 'Y Variable'},
+                shapes: [{
+                    type: 'circle',
+                    xref: 'x',
+                    yref: 'y',
+                    x0: h0Mean[0] - 0.1,
+                    y0: h0Mean[1] - 0.1,
+                    x1: h0Mean[0] + 0.1,
+                    y1: h0Mean[1] + 0.1,
+                    line: {color: 'var(--danger-color)'} // Fixed CSS variable reference
+                }]
+            };
+
+            Plotly.newPlot('plot', [trace], layout);
+        }
+        
+        function generateNewSample() {
+            // Generate new population parameters
+            trueMean = [d3.randomNormal(0, 2)(), d3.randomNormal(0, 2)()];
+            h0Mean = trueMean.map(m => m + d3.randomNormal(0, 0.25)());
+            
+            covarianceMatrix = [
+                [d3.randomUniform(0.5, 2)(), d3.randomUniform(-0.8, 0.8)()],
+                [covarianceMatrix[0][1], d3.randomUniform(0.5, 2)()]
+            ];
+            
+            sampleData = generateBivariateNormal(trueMean, covarianceMatrix);
+            updatePlot(sampleData);
+            
+            // Update H₀ display
+            document.getElementById('h0MeanX').textContent = h0Mean[0].toFixed(2);
+            document.getElementById('h0MeanY').textContent = h0Mean[1].toFixed(2);
+            
+            document.getElementById('result').innerHTML = '';
+        }
+
+        function submitDecision(accepted) {
+            const result = hotellingT2(sampleData, h0Mean);
+            const correct = accepted !== result.rejected;
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <p>T² Statistic: ${result.T2.toFixed(2)}</p>
+                <p>Critical Value: ${result.Fcrit.toFixed(2)}</p>
+                <p>${correct ? 'Correct!' : 'Incorrect!'} True Mean: (${trueMean.map(v => v.toFixed(2)).join(', ')})</p>
+            `;
+            
+            resultDiv.style.backgroundColor = correct ? '#e8f5e9' : '#ffebee';
+            resultDiv.style.color = correct ? '#1b5e20' : '#b71c1c';
+        }
+
+        // Initial generation
+        
+        generateNewSample();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.4/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+</body>
+</html>
