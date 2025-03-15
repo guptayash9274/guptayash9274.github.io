@@ -29,7 +29,14 @@
       padding: 20px;
       transition: right 0.3s ease;
       z-index: 1000;
-      backdrop-filter: blur(1px); /* Glass effect */
+      backdrop-filter: blur(2px); /* Glass effect */
+    }
+    @media (max-width: 768px) {
+      .sidebar-menu {
+        backdrop-filter: blur(3px); /* Mobile blur */
+        -webkit-backdrop-filter: blur(10px); /* Safari support */
+        background: rgba(255, 255, 255, 0.5); /* More opaque for better mobile readability */
+      }
     }
     .sidebar-menu.active {
       right: 0;
