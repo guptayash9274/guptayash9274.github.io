@@ -4,67 +4,133 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yash Gupta</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    body {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      line-height: 1.6;
-      margin: -20px auto;
-      max-width: 800px;
-      padding: 0 20px;
-      color: #333;
+    /* Particles Background */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     }
-
-    /* Styling for the text container */
-    .text-container {
-      max-width: 800px; /* Max width for better readability */
-      margin: 0 auto; /* Centers the container on the page */
+    
+    /* ===== Vertical Sidebar Menu Styles ===== */
+    .sidebar-menu {
+      position: fixed;
+      top: 0;
+      right: -220px; /* Hidden offscreen */
+      width: 200px;
+      height: 100%;
+      background: #ffffff;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
       padding: 20px;
+      transition: right 0.3s ease;
+      z-index: 1000;
+    }
+    .sidebar-menu.active {
+      right: 0;
+    }
+    .sidebar-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar-menu li {
+      margin-bottom: 15px;
+      position: relative;
+    }
+    .sidebar-menu a {
+      text-decoration: none;
+      color: #333;
+      font-size: 1rem;
+      display: block;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+    .sidebar-menu a:hover {
+      background: #f8f9ff;
+      color: #0074D9;
+    }
+    /* Hide dropdown options by default */
+    .dropdown {
+      margin-left: 15px;
+      display: none;
+    }
+    /* Show dropdown on hover */
+    .sidebar-menu li:hover > .dropdown {
+      display: block;
+    }
+    
+    /* ===== Floating Menu Button Styles ===== */
+    .menu-button {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1100;
+      background: linear-gradient(45deg, #ff6b6b, #feca57, #1dd1a1, #54a0ff);
+      background-size: 400% 400%;
+      opacity: 0.7;
+      /* Two animations: one for gradient shift, one for a continuous random walk */
+      animation: gradientAnimation 4s ease infinite, randomWalk 30s ease-in-out infinite;
+    }
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    p {
-      text-align: justify; /* Ensures the text is justified with both left and right edges aligned */
-      margin-bottom: 20px; /* Adds space between paragraphs */
-      text-justify: inter-word; /* Controls how the spacing is handled between words */
-      line-height: 1.6; /* Adjust line height for better readability */
+    @keyframes randomWalk {
+    0% { top: 43.672284638763528%; left: 90.86497083784967%; }
+    10% { top: 90.672284638763528%; left: 45.86497083784967%; }
+    20.0% { top: 3.672284638763528%; left: 9.86497083784967%; }
+    30.0% { top: 45%; left: 45%; }
+    40.0% { top: 78%; left: 17%; }
+    50.0% { top: 7.672284638763528%; left: 80.86497083784967%; }
+    60.0% { top: 25.672284638763528%; left: 9.86497083784967%; }
+    70.0% { top: 67.672284638763528%; left: 47.86497083784967%; }
+    80.0% { top: 87.672284638763528%; left: 32.86497083784967%; }
+    90.0% { top: 34%; left: 34%; }
+    100.0% { top: 43.672284638763528%; left: 90.86497083784967%; }
     }
 
-
+    
+    /* ===== Portfolio Content Styles (Unchanged) ===== */
     .quarto-about-trestles {
       display: flex;
       gap: 40px;
       margin-top: 30px;
     }
-
     .about-entity {
       width: 40%;
       margin-top: 20px;
       border-right: 1px solid #c1bdbd;
       padding-right: 20px;
     }
-
     .about-image {
       width: 100%;
       height: auto;
       margin-bottom: 25px;
       border-radius: 4px;
     }
-
     .quarto-title {
       margin-bottom: 5px;
       margin-top: -25px;
     }
-
     .quarto-title h1 {
       font-size: 2.2rem;
       margin: 0;
     }
-
     .about-links {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
     }
-
     .about-link {
       color: #333;
       text-decoration: none;
@@ -77,35 +143,11 @@
       align-items: center;
       min-height: 40px;
     }
-
     .about-link:hover {
       border-color: #0074D9;
       background: #f8f9ff;
       transform: translateY(-2px);
     }
-
-    .about-link-text {
-      font-weight: 500;
-    }
-
-    .about-contents {
-      flex: 1;
-      margin-left: -15px ;
-    }
-
-    .about-contents p {
-      margin-bottom: 1.2em;
-    }
-
-    .about-contents ul {
-      padding-left: 20px;
-      margin-bottom: 1.2em;
-    }
-
-    .about-contents li {
-      margin-bottom: 0.5em;
-    }
-
     @media (max-width: 768px) {
       .quarto-about-trestles {
         flex-direction: column;
@@ -117,15 +159,42 @@
         grid-template-columns: 1fr;
       }
     }
-
-    @media (max-width: 480px) {
-      .about-links {
-        grid-template-columns: 1fr;
-      }
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      margin: -20px auto;
+      max-width: 800px;
+      padding: 0 20px;
+      color: #333;
+      background: none;
     }
   </style>
 </head>
 <body>
+  <!-- Particles.js Background -->
+  <div id="particles-js"></div>
+  
+  <!-- Vertical Sidebar Menu -->
+  <div class="sidebar-menu" id="sidebarMenu">
+    <ul>
+      <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="#"><i class="fas fa-blog"></i> Blogs: Coming Soon</a></li>
+      <li>
+        <a href="#"><i class="fas fa-gamepad"></i> Games</a>
+        <ul class="dropdown">
+          <li><a href="guess_correlation.html">Guess the Correlation</a></li>
+          <li><a href="guess_centre.html">Guess the Centre</a></li>
+          <li><a href="guess_H0.html">Judge the H0</a></li>
+        </ul>
+      </li>
+      <li><a href="#"><i class="fas fa-random"></i> Random Stuff</a></li>
+    </ul>
+  </div>
+  
+  <!-- Floating Menu Button (Gradient, Animated, Random Walk, Transparent) -->
+  <div class="menu-button" onclick="toggleMenu()"></div>
+  
+  <!-- Portfolio Content -->
   <div class="quarto-about-trestles">
     <div class="about-entity">
       <img src="assets/yash3.jpg" class="about-image" alt="Yash">
@@ -149,23 +218,74 @@
     </div>
     <div class="about-contents">
       <p>Hi! I am Yash Gupta, a data professional, a statistician and a curious learner. I hold a <strong>Master's Degree in Computational Statistics </strong> from <strong>Indian Statistical Institute, Kolkata</strong>, and a <strong>Bachelor’s in Statistics</strong> from <strong>Banaras Hindu University</strong>.</p>
-
       <p>Currently, I work as an <strong>Analyst - Data and Analytics at HSBC</strong>, where I build predictive models, and create automated solutions that improve business processes and customer experiences.</p>
-
       <p>I’m particularly interested in Statistical Modeling, Machine Learning and Econometrics. Recently, I have been focusing more on learning about <strong>Causal Inference, A/B Testing and Designing Robust Experiments</strong>. I want to become a Data Scientist in related area.</p>
-
-      <p>Apart from study, I like solving puzzles, watching movies, traveling and reading blogs.</p>
-
-      <p>I’m always excited to connect with like-minded individuals and explore how data can create value. </p>
-
+      <p>Apart from study, I like solving puzzles, watching movies, traveling, reading blogs and creating cool animations.</p>
+      <p>I’m always excited to connect with like-minded individuals and explore how data can create value.</p>
+      <p>If you read so far, click on the floating bubble, I have some games for you.</p>
     </div>
   </div>
-  <!-- <ul>
-    <li><strong>Simulation Study on Non-Parametric LMPR Tests for Scale</strong>: This is a group project in contribution with Saransh Gupta and Rohan P. Shinde. We have extensively performed simulation to study the behaviour of the Locally Most Powerful Rank Tests for Scale Parameter. Additionally, we have derived Test Statistics for specific distributions as well as new Non Parametric tests to test the significance of the scale parameter  by improvising on the already existing tests for location parameters.</li>
-    <li><strong>Biting Fly Data Analysis (Supervised ML)</strong>: This is a course project with collaboration with Aditya Negi and harsh Gupta. The goal of this project was to practically apply the cocepts of Multivariate Anaysis on a small dataset. We used classical ML algorithms like LDA, QDA, Logistic Regression to classify the two groups of fly based on their biolgocal characteristics.</li>
-    <li><strong>Cointegration Processes Presentation</strong>: A short presentation emphasisng the importance of Cointegration in Ecomotrics.</li>
-    <li><strong>Presentation of Non Linear Dimensionality Reduction Techniques</strong>: In collaboration with Sampurna Mondal and Rohan P. Shinde, we discussed about algorithms, advantages and disadvantages of popular High Dimnesioanlity Reduction Techniques like Kernalized PCA, IsoMap, Local Linear Embedding, Diffusion Maps and t-SNE.</li>
-    <li><strong>Regression Analysis for Prediction of Health Insurance Premium Cost</strong>: This was my first course project in Masters where I applied various Regression Techniques specially Robust Regression (Loss Functions : Huber, Bi-Square) and Resistant Regression. I compared the performance of these methods with Linear Regression over Health Insurance Dataset which is quite sparse in nature. </li>
-  </ul> -->
+  
+  <!-- Include particles.js library -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebarMenu');
+      sidebar.classList.toggle('active');
+    }
+    window.onclick = function(event) {
+      const sidebar = document.getElementById('sidebarMenu');
+      if (!event.target.closest('.menu-button') && !event.target.closest('#sidebarMenu')) {
+        sidebar.classList.remove('active');
+      }
+    }
+    // Initialize particles.js with a subtle data-point theme
+    particlesJS("particles-js", {
+      "particles": {
+        "number": {
+          "value": 60,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": "#0074D9"
+        },
+        "shape": {
+          "type": "circle"
+        },
+        "opacity": {
+          "value": 0.5
+        },
+        "size": {
+          "value": 3
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#0074D9",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 2
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": false
+          },
+          "onclick": {
+            "enable": false
+          }
+        }
+      },
+      "retina_detect": true
+    });
+  </script>
 </body>
 </html>

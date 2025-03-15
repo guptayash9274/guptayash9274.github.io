@@ -84,7 +84,7 @@
         <div id="plot"></div>
         <div class="controls">
             <div class="score-board" id="score">
-                Score: 100
+                Max Score : 100
             </div>
             <button onclick="generateNewSample()">Generate New Sample</button>
             <div class="slider-container">
@@ -162,7 +162,7 @@
             const guessedCorr = parseFloat(document.getElementById('correlationGuess').value);
             const difference = Math.abs(guessedCorr - currentCorrelation);
             
-            currentScore = Math.max(0, 100 - Math.round(difference * 100));
+            currentScore = Math.max(0, 100 - Math.round(1.5*difference * 100));
             document.getElementById('score').textContent = `Score: ${currentScore}`;
             
             const resultDiv = document.getElementById('result');

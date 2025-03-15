@@ -84,7 +84,7 @@
         <div id="plot"></div>
         <div class="controls">
             <div class="score-board" id="score">
-                Score: 0 to 100
+                Max Score : 100
             </div>
             <button onclick="generateNewSample()">Generate New Sample</button>
             <div class="slider-container">
@@ -144,9 +144,9 @@
             };
 
             const layout = {
-                title: 'Bivariate Distribution',
-                xaxis: {title: 'X Variable'},
-                yaxis: {title: 'Y Variable'},
+                title: 'Bivariate Normal Distribution',
+                xaxis: {title: 'X'},
+                yaxis: {title: 'Y'},
                 showlegend: false,
                 margin: {t: 40}
             };
