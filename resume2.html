@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <title>Yash Gupta - Resume</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      color: #333;
+      line-height: 1.6;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .contact-info {
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+    .contact-info a {
+      text-decoration: none;
+      color: #0074D9;
+      margin: 0 5px;
+    }
+    /* Top right download button */
+    .download-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 8px 12px;
+      background: #0074D9;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    section {
+      margin-bottom: 15px;
+    }
+    section h2 {
+      border-bottom: 2px solid #0074D9;
+      padding-bottom: 3px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      font-size: 1.2rem;
+    }
+    .two-col {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .two-col .left, .two-col .right {
+      width: 48%;
+    }
+    .subheading {
+      font-weight: bold;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .subheading span {
+      font-style: italic;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .item-list {
+      list-style-type: disc;
+      padding-left: 20px;
+      margin-top: 5px;
+    }
+    .item-list li {
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+    }
+    .course-list {  
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .course-list li {
+      width: 25%;
+      margin-bottom: 4px;
+      box-sizing: border-box;
+    }
+    /* Gray separator for projects */
+    .separator {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="download-btn" id="downloadBtn">Download PDF</div>
+    <h1>Yash Gupta</h1>
+    <div class="contact-info">
+        <a href="tel:+918127013456">
+          <i class="fas fa-phone-alt"></i>
+        </a> | 
+        <a href="mailto:guptayash1204@gmail.com">
+          <i class="fas fa-envelope"></i>
+        </a> | 
+        <a href="https://www.linkedin.com/in/yash-gupta-764337194/">
+          <i class="fab fa-linkedin"></i>
+        </a> | 
+        <a href="https://github.com/guptayash9274">
+          <i class="fab fa-github"></i>
+        </a>
+    </div>
+      
+  </header>
+
+  <!-- Education Section -->
+  <section>
+    <h2>Education</h2>
+    <div class="two-col">
+      <div class="left">
+        <div class="subheading">Indian Statistical Institute, Kolkata</div>
+        <div>Master of Statistics, Computational Statistics</div>
+      </div>
+      <div class="right" style="text-align: right;">
+        <div>Aug 2022 – Jun 2024</div>
+        <div class="extra-info">AIR-22 ISI MSTAT</div>
+      </div>
+    </div>
+    <div class="two-col" style="margin-top: 8px;">
+      <div class="left">
+        <div class="subheading">Banaras Hindu University, Varanasi</div>
+        <div>Bachelor of Science (Hons.) – Statistics, Mathematics</div>
+      </div>
+      <div class="right" style="text-align: right;">
+        <div>Jul 2019 – Jun 2022</div>
+        <div>9.01 CGPA</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section>
+    <h2>Experience</h2>
+    <div class="two-col">
+      <div class="left">
+        <div class="subheading">HSBC | Analyst – Data and Analytics</div>
+      </div>
+      <div class="right" style="text-align: right;">
+        <div>[Aug '24 – Present]</div>
+      </div>
+    </div>
+    <ul class="item-list">
+      <li><strong>Optimized Auto-Close Time for IN Market:</strong> Identified root causes of elevated customer wait time and reduced auto-close time by 12 minutes, improving satisfaction by 10% and increasing agent efficiency by 8%.</li>
+      <li><strong>Automated KPI Dashboard:</strong> Developed weekly dashboards tracking KPIs (NPS, RCR, AWT), eliminating manual reporting hours and enabling strategic workflow adjustments across 4 markets.</li>
+      <li><strong>Predictive Modeling for NPS Score:</strong> Built a Multiple Linear Regression model using FCR and AWT to quantify the impact on customer satisfaction, providing actionable recommendations.</li>
+      <li><strong>Data Preprocessing and Feature Extraction:</strong> Engineered pipelines to clean and structure conversational data using pandas, datetime, and multiprocessing, extracting critical KPIs for analysis.</li>
+    </ul>
+  </section>
+
+  <!-- Projects Section -->
+  <section>
+    <h2>Projects</h2>
+    
+    <!-- Project 1 -->
+    <div class="two-col">
+      <div class="left">
+        <div class="subheading">Anomaly Detection Using Statistical Data Depth | <em>Prof. Amita Pal</em></div>
+      </div>
+      <div class="right" style="text-align: right;">
+        <div>[Feb – May '24]</div>
+      </div>
+    </div>
+    <ul class="item-list">
+      <li>Worked on an advanced method to detect anomalies based on the concept of <strong>Statistical Data Depth</strong>.</li>
+      <li>Explored methods such as <strong>Spatial Depth, Projection Depth, Kernelised Projection Depth</strong>.</li>
+      <li>Utilised <strong>kernelised PCA</strong> for dimensionality reduction and enhanced efficiency.</li>
+      <li>Outperformed ML algorithms like <strong>Isolation Forest</strong> &amp; <strong>LOF</strong> by <strong>3%</strong> on benchmark datasets.</li>
+    </ul>
+    <hr class="separator">
+    
+    <!-- Project 2 -->
+    <div class="two-col">
+      <div class="left">
+        <div class="subheading">Regression Analysis for Prediction of Health Insurance Premium Cost | <em>Prof. Deepayan Sarkar</em></div>
+      </div>
+      <div class="right" style="text-align: right;">
+        <div>[Oct '22]</div>
+      </div>
+    </div>
+    <ul class="item-list">
+      <li>Implemented <strong>Multiple Linear and Robust Regression Models</strong> for prediction and validated performance.</li>
+      <li>Enhanced model using <strong>VIF, Box-Cox Transformation</strong>, and <strong>Residual + Component Plots</strong>.</li>
+      <li>Reduced Median Absolute Deviation on test data by <strong>34%</strong> using robust regression (Huber, Bi-square).</li>
+      <li>Fitted resistant regression models: <strong>LTS</strong> and <strong>LMS</strong>.</li>
+    </ul>
+    <hr class="separator">
+    
+    <!-- Project 3 -->
+    <div class="two-col">
+      <div class="left">
+        <div class="subheading">Supervised ML Techniques for Analyzing Biting Fly Data | <em>Prof. Swagata Nandi</em></div>
+      </div>
+      <div class="right" style="text-align: right;">
+        <div>[Apr '23]</div>
+      </div>
+    </div>
+    <ul class="item-list">
+      <li>Applied <strong>Box-Cox Transformation</strong> to address skewed predictors.</li>
+      <li>Utilized supervised algorithms like <strong>LDA, QDA, and KNN</strong> for classification.</li>
+      <li>Achieved nearly <strong>80%</strong> accuracy using Logistic Regression on test data.</li>
+      <li>Reduced feature dimensions using <strong>Principal Component Analysis</strong>.</li>
+    </ul>
+    <hr class="separator">
+    
+    <!-- Project 4 -->
+    <div class="two-col">
+      <div class="left">
+        <div class="subheading">Simulation Study on Non-Parametric LMPR Tests for Scale | <em>Prof. Isha Dewan</em></div>
+      </div>
+      <div class="right" style="text-align: right;">
+        <div>[Mar '23]</div>
+      </div>
+    </div>
+    <ul class="item-list">
+      <li>Developed tests by modifying <strong>Median, WRS, and Mann-Whitney</strong> tests for scale differences.</li>
+      <li>Evaluated test statistics: <strong>Capon, Klotz, and Mood</strong>.</li>
+      <li>Reduced data generation time by 4x using parallel processing in R.</li>
+    </ul>
+  </section>
+  
+  <!-- Relevant Coursework Section -->
+  <section>
+    <h2>Relevant Coursework</h2>
+    <ul class="course-list">
+      <li>Regression Techniques</li>
+      <li>Probability Theory</li>
+      <li>Financial Econometrics</li>
+      <li>Quantitative Finance</li>
+      <li>Time Series Analysis</li>
+      <li>Non-Parametric Inference</li>
+      <li>Bayesian Inference</li>
+      <li>Pattern Recognition</li>
+    </ul>
+  </section>
+
+  <!-- Technical Skills Section -->
+  <section>
+    <h2>Technical Skills</h2>
+    <ul class="item-list">
+      <li><strong>Languages:</strong> Python, R, SQL</li>
+      <li><strong>Tools &amp; Libraries:</strong> Numpy, Pandas, Scikit-Learn, Tidyverse, Lattice, MS Excel, PowerPoint, Markdown, Jupyter Lab</li>
+      <li><strong>Interests:</strong> Statistical Modeling, Regression Methods, Probability, Machine Learning &amp; A/B Testing</li>
+    </ul>
+  </section>
+
+  <!-- Achievements Section -->
+  <section>
+    <h2>Achievements</h2>
+    <ul class="item-list">
+      <li>Secured All India Rank 22 in ISI MStat 2022 Entrance Exam.</li>
+      <li>Secured All India Rank 45 in IIT JAM MS 2022.</li>
+      <li>Ranked in the top 1% in the Higher Secondary State Board Examination.</li>
+      <li>Maintained 1st position continuously from Primary to Higher Secondary Education.</li>
+    </ul>
+  </section>
+  
+  <!-- Include html2pdf.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <script>
+    // Add event listener to the download button for real-time PDF conversion.
+    document.getElementById('downloadBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      var element = document.body;
+      var opt = {
+        margin: 0.5,
+        filename: 'Yash_Gupta_Resume.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    });
+  </script>
+</body>
+</html>
