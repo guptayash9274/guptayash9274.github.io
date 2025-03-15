@@ -1,0 +1,66 @@
+**Necessary changes for adding music:**
+
+1. **HTML:**  
+   - Insert a new `<div class="music-player">` at the top of the body that contains an `<audio>` element (with your chosen audio file) and a toggle button. For example:
+
+   ```html
+   <div class="music-player">
+     <audio id="background-music" loop>
+       <source src="assets/background.mp3" type="audio/mp3">
+       Your browser does not support the audio element.
+     </audio>
+     <button id="music-toggle" onclick="toggleMusic()">Play Music</button>
+   </div>
+   ```
+
+2. **CSS:**  
+   - Add styles for the `.music-player` to position it (e.g., fixed at the top-left corner) and ensure it displays only on desktop via a media query:
+
+   ```css
+   .music-player {
+     position: fixed;
+     top: 10px;
+     left: 10px;
+     z-index: 1200;
+     display: none;
+   }
+   @media (min-width: 768px) {
+     .music-player {
+       display: block;
+     }
+   }
+   .music-player button {
+     background: #3f51b5;
+     color: white;
+     border: none;
+     padding: 8px 15px;
+     border-radius: 20px;
+     cursor: pointer;
+     transition: background 0.3s ease;
+   }
+   .music-player button:hover {
+     background: #303f9f;
+   }
+   ```
+
+3. **JavaScript:**  
+   - Implement the `toggleMusic()` function to control the play/pause state of the audio and update the button text accordingly:
+
+   ```js
+   function toggleMusic() {
+     const audio = document.getElementById('background-music');
+     const button = document.getElementById('music-toggle');
+     if (audio.paused) {
+       audio.play();
+       button.textContent = "Pause Music";
+     } else {
+       audio.pause();
+       button.textContent = "Play Music";
+     }
+   }
+   ```
+
+**Soothing Piano Music Suggestions:**  
+Consider using tracks like **"Nuvole Bianche" by Ludovico Einaudi** or **"River Flows in You" by Yiruma** for a calming background experience.  
+
+These changes integrate a desktop-only music player into your portfolio without altering your existing layout or styling.
