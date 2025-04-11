@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Feature Explorer</title>
+<style>
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 20px;
+  }
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+  }
+  .card img {
+    width: 100%;
+    height: 150px;
+    object-fit: contain;
+    cursor: pointer;
+  }
+  .search-box {
+    margin: 20px;
+    width: 300px;
+    padding: 10px;
+  }
+</style>
+</head>
+<body>
+<input type="text" class="search-box" placeholder="Search variables..." id="searchInput">
+<div class="grid-container" id="imageGrid">
+<div class="card" data-varname="age">
+  <img src="variable_plots/age.png" alt="age" onclick="showFullSize('variable_plots/age.png')">
+  <div>age</div>
+</div>
+<div class="card" data-varname="avg_bill_3m">
+  <img src="variable_plots/avg_bill_3m.png" alt="avg_bill_3m" onclick="showFullSize('variable_plots/avg_bill_3m.png')">
+  <div>avg_bill_3m</div>
+</div>
+<div class="card" data-varname="avg_bill_6m">
+  <img src="variable_plots/avg_bill_6m.png" alt="avg_bill_6m" onclick="showFullSize('variable_plots/avg_bill_6m.png')">
+  <div>avg_bill_6m</div>
+</div>
+<div class="card" data-varname="avg_paid_pct_3m">
+  <img src="variable_plots/avg_paid_pct_3m.png" alt="avg_paid_pct_3m" onclick="showFullSize('variable_plots/avg_paid_pct_3m.png')">
+  <div>avg_paid_pct_3m</div>
+</div>
+<div class="card" data-varname="avg_paid_pct_6m">
+  <img src="variable_plots/avg_paid_pct_6m.png" alt="avg_paid_pct_6m" onclick="showFullSize('variable_plots/avg_paid_pct_6m.png')">
+  <div>avg_paid_pct_6m</div>
+</div>
+<div class="card" data-varname="avg_util_3m">
+  <img src="variable_plots/avg_util_3m.png" alt="avg_util_3m" onclick="showFullSize('variable_plots/avg_util_3m.png')">
+  <div>avg_util_3m</div>
+</div>
+<div class="card" data-varname="avg_util_6m">
+  <img src="variable_plots/avg_util_6m.png" alt="avg_util_6m" onclick="showFullSize('variable_plots/avg_util_6m.png')">
+  <div>avg_util_6m</div>
+</div>
+<div class="card" data-varname="bill_amt1">
+  <img src="variable_plots/bill_amt1.png" alt="bill_amt1" onclick="showFullSize('variable_plots/bill_amt1.png')">
+  <div>bill_amt1</div>
+</div>
+<div class="card" data-varname="bill_amt2">
+  <img src="variable_plots/bill_amt2.png" alt="bill_amt2" onclick="showFullSize('variable_plots/bill_amt2.png')">
+  <div>bill_amt2</div>
+</div>
+<div class="card" data-varname="bill_amt3">
+  <img src="variable_plots/bill_amt3.png" alt="bill_amt3" onclick="showFullSize('variable_plots/bill_amt3.png')">
+  <div>bill_amt3</div>
+</div>
+<div class="card" data-varname="bill_amt4">
+  <img src="variable_plots/bill_amt4.png" alt="bill_amt4" onclick="showFullSize('variable_plots/bill_amt4.png')">
+  <div>bill_amt4</div>
+</div>
+<div class="card" data-varname="bill_amt5">
+  <img src="variable_plots/bill_amt5.png" alt="bill_amt5" onclick="showFullSize('variable_plots/bill_amt5.png')">
+  <div>bill_amt5</div>
+</div>
+<div class="card" data-varname="bill_amt6">
+  <img src="variable_plots/bill_amt6.png" alt="bill_amt6" onclick="showFullSize('variable_plots/bill_amt6.png')">
+  <div>bill_amt6</div>
+</div>
+<div class="card" data-varname="count_months_ge_1">
+  <img src="variable_plots/count_months_ge_1.png" alt="count_months_ge_1" onclick="showFullSize('variable_plots/count_months_ge_1.png')">
+  <div>count_months_ge_1</div>
+</div>
+<div class="card" data-varname="count_months_ge_2">
+  <img src="variable_plots/count_months_ge_2.png" alt="count_months_ge_2" onclick="showFullSize('variable_plots/count_months_ge_2.png')">
+  <div>count_months_ge_2</div>
+</div>
+<div class="card" data-varname="count_months_ge_3">
+  <img src="variable_plots/count_months_ge_3.png" alt="count_months_ge_3" onclick="showFullSize('variable_plots/count_months_ge_3.png')">
+  <div>count_months_ge_3</div>
+</div>
+<div class="card" data-varname="count_months_ge_5">
+  <img src="variable_plots/count_months_ge_5.png" alt="count_months_ge_5" onclick="showFullSize('variable_plots/count_months_ge_5.png')">
+  <div>count_months_ge_5</div>
+</div>
+<div class="card" data-varname="current_paid_pct">
+  <img src="variable_plots/current_paid_pct.png" alt="current_paid_pct" onclick="showFullSize('variable_plots/current_paid_pct.png')">
+  <div>current_paid_pct</div>
+</div>
+<div class="card" data-varname="education">
+  <img src="variable_plots/education.png" alt="education" onclick="showFullSize('variable_plots/education.png')">
+  <div>education</div>
+</div>
+<div class="card" data-varname="ever_missed_payment">
+  <img src="variable_plots/ever_missed_payment.png" alt="ever_missed_payment" onclick="showFullSize('variable_plots/ever_missed_payment.png')">
+  <div>ever_missed_payment</div>
+</div>
+<div class="card" data-varname="last6m_never_delq_ge_1">
+  <img src="variable_plots/last6m_never_delq_ge_1.png" alt="last6m_never_delq_ge_1" onclick="showFullSize('variable_plots/last6m_never_delq_ge_1.png')">
+  <div>last6m_never_delq_ge_1</div>
+</div>
+<div class="card" data-varname="last6m_never_delq_ge_2">
+  <img src="variable_plots/last6m_never_delq_ge_2.png" alt="last6m_never_delq_ge_2" onclick="showFullSize('variable_plots/last6m_never_delq_ge_2.png')">
+  <div>last6m_never_delq_ge_2</div>
+</div>
+<div class="card" data-varname="last6m_never_delq_ge_3">
+  <img src="variable_plots/last6m_never_delq_ge_3.png" alt="last6m_never_delq_ge_3" onclick="showFullSize('variable_plots/last6m_never_delq_ge_3.png')">
+  <div>last6m_never_delq_ge_3</div>
+</div>
+<div class="card" data-varname="last6m_never_delq_ge_5">
+  <img src="variable_plots/last6m_never_delq_ge_5.png" alt="last6m_never_delq_ge_5" onclick="showFullSize('variable_plots/last6m_never_delq_ge_5.png')">
+  <div>last6m_never_delq_ge_5</div>
+</div>
+<div class="card" data-varname="last6m_never_underpayment">
+  <img src="variable_plots/last6m_never_underpayment.png" alt="last6m_never_underpayment" onclick="showFullSize('variable_plots/last6m_never_underpayment.png')">
+  <div>last6m_never_underpayment</div>
+</div>
+<div class="card" data-varname="last6m_never_util_gt_75">
+  <img src="variable_plots/last6m_never_util_gt_75.png" alt="last6m_never_util_gt_75" onclick="showFullSize('variable_plots/last6m_never_util_gt_75.png')">
+  <div>last6m_never_util_gt_75</div>
+</div>
+<div class="card" data-varname="last6m_never_util_gt_90">
+  <img src="variable_plots/last6m_never_util_gt_90.png" alt="last6m_never_util_gt_90" onclick="showFullSize('variable_plots/last6m_never_util_gt_90.png')">
+  <div>last6m_never_util_gt_90</div>
+</div>
+<div class="card" data-varname="last6m_never_util_lt_10">
+  <img src="variable_plots/last6m_never_util_lt_10.png" alt="last6m_never_util_lt_10" onclick="showFullSize('variable_plots/last6m_never_util_lt_10.png')">
+  <div>last6m_never_util_lt_10</div>
+</div>
+<div class="card" data-varname="last6m_never_util_lt_25">
+  <img src="variable_plots/last6m_never_util_lt_25.png" alt="last6m_never_util_lt_25" onclick="showFullSize('variable_plots/last6m_never_util_lt_25.png')">
+  <div>last6m_never_util_lt_25</div>
+</div>
+<div class="card" data-varname="limit_bal">
+  <img src="variable_plots/limit_bal.png" alt="limit_bal" onclick="showFullSize('variable_plots/limit_bal.png')">
+  <div>limit_bal</div>
+</div>
+<div class="card" data-varname="marriage">
+  <img src="variable_plots/marriage.png" alt="marriage" onclick="showFullSize('variable_plots/marriage.png')">
+  <div>marriage</div>
+</div>
+<div class="card" data-varname="max_bill_1m">
+  <img src="variable_plots/max_bill_1m.png" alt="max_bill_1m" onclick="showFullSize('variable_plots/max_bill_1m.png')">
+  <div>max_bill_1m</div>
+</div>
+<div class="card" data-varname="max_bill_3m">
+  <img src="variable_plots/max_bill_3m.png" alt="max_bill_3m" onclick="showFullSize('variable_plots/max_bill_3m.png')">
+  <div>max_bill_3m</div>
+</div>
+<div class="card" data-varname="max_bill_6m">
+  <img src="variable_plots/max_bill_6m.png" alt="max_bill_6m" onclick="showFullSize('variable_plots/max_bill_6m.png')">
+  <div>max_bill_6m</div>
+</div>
+<div class="card" data-varname="max_util_1m">
+  <img src="variable_plots/max_util_1m.png" alt="max_util_1m" onclick="showFullSize('variable_plots/max_util_1m.png')">
+  <div>max_util_1m</div>
+</div>
+<div class="card" data-varname="max_util_3m">
+  <img src="variable_plots/max_util_3m.png" alt="max_util_3m" onclick="showFullSize('variable_plots/max_util_3m.png')">
+  <div>max_util_3m</div>
+</div>
+<div class="card" data-varname="max_util_6m">
+  <img src="variable_plots/max_util_6m.png" alt="max_util_6m" onclick="showFullSize('variable_plots/max_util_6m.png')">
+  <div>max_util_6m</div>
+</div>
+<div class="card" data-varname="min_bill_3m">
+  <img src="variable_plots/min_bill_3m.png" alt="min_bill_3m" onclick="showFullSize('variable_plots/min_bill_3m.png')">
+  <div>min_bill_3m</div>
+</div>
+<div class="card" data-varname="min_bill_6m">
+  <img src="variable_plots/min_bill_6m.png" alt="min_bill_6m" onclick="showFullSize('variable_plots/min_bill_6m.png')">
+  <div>min_bill_6m</div>
+</div>
+<div class="card" data-varname="min_paid_pct_6m">
+  <img src="variable_plots/min_paid_pct_6m.png" alt="min_paid_pct_6m" onclick="showFullSize('variable_plots/min_paid_pct_6m.png')">
+  <div>min_paid_pct_6m</div>
+</div>
+<div class="card" data-varname="min_util_3m">
+  <img src="variable_plots/min_util_3m.png" alt="min_util_3m" onclick="showFullSize('variable_plots/min_util_3m.png')">
+  <div>min_util_3m</div>
+</div>
+<div class="card" data-varname="min_util_6m">
+  <img src="variable_plots/min_util_6m.png" alt="min_util_6m" onclick="showFullSize('variable_plots/min_util_6m.png')">
+  <div>min_util_6m</div>
+</div>
+<div class="card" data-varname="months_full_payment">
+  <img src="variable_plots/months_full_payment.png" alt="months_full_payment" onclick="showFullSize('variable_plots/months_full_payment.png')">
+  <div>months_full_payment</div>
+</div>
+<div class="card" data-varname="months_low_payment">
+  <img src="variable_plots/months_low_payment.png" alt="months_low_payment" onclick="showFullSize('variable_plots/months_low_payment.png')">
+  <div>months_low_payment</div>
+</div>
+<div class="card" data-varname="months_overpayment">
+  <img src="variable_plots/months_overpayment.png" alt="months_overpayment" onclick="showFullSize('variable_plots/months_overpayment.png')">
+  <div>months_overpayment</div>
+</div>
+<div class="card" data-varname="months_since_delq_ge_1">
+  <img src="variable_plots/months_since_delq_ge_1.png" alt="months_since_delq_ge_1" onclick="showFullSize('variable_plots/months_since_delq_ge_1.png')">
+  <div>months_since_delq_ge_1</div>
+</div>
+<div class="card" data-varname="months_since_delq_ge_2">
+  <img src="variable_plots/months_since_delq_ge_2.png" alt="months_since_delq_ge_2" onclick="showFullSize('variable_plots/months_since_delq_ge_2.png')">
+  <div>months_since_delq_ge_2</div>
+</div>
+<div class="card" data-varname="months_since_delq_ge_3">
+  <img src="variable_plots/months_since_delq_ge_3.png" alt="months_since_delq_ge_3" onclick="showFullSize('variable_plots/months_since_delq_ge_3.png')">
+  <div>months_since_delq_ge_3</div>
+</div>
+<div class="card" data-varname="months_since_delq_ge_5">
+  <img src="variable_plots/months_since_delq_ge_5.png" alt="months_since_delq_ge_5" onclick="showFullSize('variable_plots/months_since_delq_ge_5.png')">
+  <div>months_since_delq_ge_5</div>
+</div>
+<div class="card" data-varname="months_since_underpayment">
+  <img src="variable_plots/months_since_underpayment.png" alt="months_since_underpayment" onclick="showFullSize('variable_plots/months_since_underpayment.png')">
+  <div>months_since_underpayment</div>
+</div>
+<div class="card" data-varname="months_since_util_gt_75">
+  <img src="variable_plots/months_since_util_gt_75.png" alt="months_since_util_gt_75" onclick="showFullSize('variable_plots/months_since_util_gt_75.png')">
+  <div>months_since_util_gt_75</div>
+</div>
+<div class="card" data-varname="months_since_util_gt_90">
+  <img src="variable_plots/months_since_util_gt_90.png" alt="months_since_util_gt_90" onclick="showFullSize('variable_plots/months_since_util_gt_90.png')">
+  <div>months_since_util_gt_90</div>
+</div>
+<div class="card" data-varname="months_since_util_lt_10">
+  <img src="variable_plots/months_since_util_lt_10.png" alt="months_since_util_lt_10" onclick="showFullSize('variable_plots/months_since_util_lt_10.png')">
+  <div>months_since_util_lt_10</div>
+</div>
+<div class="card" data-varname="months_since_util_lt_25">
+  <img src="variable_plots/months_since_util_lt_25.png" alt="months_since_util_lt_25" onclick="showFullSize('variable_plots/months_since_util_lt_25.png')">
+  <div>months_since_util_lt_25</div>
+</div>
+<div class="card" data-varname="months_util_gt_50">
+  <img src="variable_plots/months_util_gt_50.png" alt="months_util_gt_50" onclick="showFullSize('variable_plots/months_util_gt_50.png')">
+  <div>months_util_gt_50</div>
+</div>
+<div class="card" data-varname="months_util_gt_60">
+  <img src="variable_plots/months_util_gt_60.png" alt="months_util_gt_60" onclick="showFullSize('variable_plots/months_util_gt_60.png')">
+  <div>months_util_gt_60</div>
+</div>
+<div class="card" data-varname="months_util_gt_75">
+  <img src="variable_plots/months_util_gt_75.png" alt="months_util_gt_75" onclick="showFullSize('variable_plots/months_util_gt_75.png')">
+  <div>months_util_gt_75</div>
+</div>
+<div class="card" data-varname="months_util_gt_90">
+  <img src="variable_plots/months_util_gt_90.png" alt="months_util_gt_90" onclick="showFullSize('variable_plots/months_util_gt_90.png')">
+  <div>months_util_gt_90</div>
+</div>
+<div class="card" data-varname="months_util_lt_10">
+  <img src="variable_plots/months_util_lt_10.png" alt="months_util_lt_10" onclick="showFullSize('variable_plots/months_util_lt_10.png')">
+  <div>months_util_lt_10</div>
+</div>
+<div class="card" data-varname="months_util_lt_25">
+  <img src="variable_plots/months_util_lt_25.png" alt="months_util_lt_25" onclick="showFullSize('variable_plots/months_util_lt_25.png')">
+  <div>months_util_lt_25</div>
+</div>
+<div class="card" data-varname="paid_pct_volatility">
+  <img src="variable_plots/paid_pct_volatility.png" alt="paid_pct_volatility" onclick="showFullSize('variable_plots/paid_pct_volatility.png')">
+  <div>paid_pct_volatility</div>
+</div>
+<div class="card" data-varname="pay_1">
+  <img src="variable_plots/pay_1.png" alt="pay_1" onclick="showFullSize('variable_plots/pay_1.png')">
+  <div>pay_1</div>
+</div>
+<div class="card" data-varname="pay_2">
+  <img src="variable_plots/pay_2.png" alt="pay_2" onclick="showFullSize('variable_plots/pay_2.png')">
+  <div>pay_2</div>
+</div>
+<div class="card" data-varname="pay_3">
+  <img src="variable_plots/pay_3.png" alt="pay_3" onclick="showFullSize('variable_plots/pay_3.png')">
+  <div>pay_3</div>
+</div>
+<div class="card" data-varname="pay_4">
+  <img src="variable_plots/pay_4.png" alt="pay_4" onclick="showFullSize('variable_plots/pay_4.png')">
+  <div>pay_4</div>
+</div>
+<div class="card" data-varname="pay_5">
+  <img src="variable_plots/pay_5.png" alt="pay_5" onclick="showFullSize('variable_plots/pay_5.png')">
+  <div>pay_5</div>
+</div>
+<div class="card" data-varname="pay_6">
+  <img src="variable_plots/pay_6.png" alt="pay_6" onclick="showFullSize('variable_plots/pay_6.png')">
+  <div>pay_6</div>
+</div>
+<div class="card" data-varname="pay_amt1">
+  <img src="variable_plots/pay_amt1.png" alt="pay_amt1" onclick="showFullSize('variable_plots/pay_amt1.png')">
+  <div>pay_amt1</div>
+</div>
+<div class="card" data-varname="pay_amt1_truncated">
+  <img src="variable_plots/pay_amt1_truncated.png" alt="pay_amt1_truncated" onclick="showFullSize('variable_plots/pay_amt1_truncated.png')">
+  <div>pay_amt1_truncated</div>
+</div>
+<div class="card" data-varname="pay_amt2">
+  <img src="variable_plots/pay_amt2.png" alt="pay_amt2" onclick="showFullSize('variable_plots/pay_amt2.png')">
+  <div>pay_amt2</div>
+</div>
+<div class="card" data-varname="pay_amt2_truncated">
+  <img src="variable_plots/pay_amt2_truncated.png" alt="pay_amt2_truncated" onclick="showFullSize('variable_plots/pay_amt2_truncated.png')">
+  <div>pay_amt2_truncated</div>
+</div>
+<div class="card" data-varname="pay_amt3">
+  <img src="variable_plots/pay_amt3.png" alt="pay_amt3" onclick="showFullSize('variable_plots/pay_amt3.png')">
+  <div>pay_amt3</div>
+</div>
+<div class="card" data-varname="pay_amt3_truncated">
+  <img src="variable_plots/pay_amt3_truncated.png" alt="pay_amt3_truncated" onclick="showFullSize('variable_plots/pay_amt3_truncated.png')">
+  <div>pay_amt3_truncated</div>
+</div>
+<div class="card" data-varname="pay_amt4">
+  <img src="variable_plots/pay_amt4.png" alt="pay_amt4" onclick="showFullSize('variable_plots/pay_amt4.png')">
+  <div>pay_amt4</div>
+</div>
+<div class="card" data-varname="pay_amt4_truncated">
+  <img src="variable_plots/pay_amt4_truncated.png" alt="pay_amt4_truncated" onclick="showFullSize('variable_plots/pay_amt4_truncated.png')">
+  <div>pay_amt4_truncated</div>
+</div>
+<div class="card" data-varname="pay_amt5">
+  <img src="variable_plots/pay_amt5.png" alt="pay_amt5" onclick="showFullSize('variable_plots/pay_amt5.png')">
+  <div>pay_amt5</div>
+</div>
+<div class="card" data-varname="pay_amt5_truncated">
+  <img src="variable_plots/pay_amt5_truncated.png" alt="pay_amt5_truncated" onclick="showFullSize('variable_plots/pay_amt5_truncated.png')">
+  <div>pay_amt5_truncated</div>
+</div>
+<div class="card" data-varname="pay_amt6">
+  <img src="variable_plots/pay_amt6.png" alt="pay_amt6" onclick="showFullSize('variable_plots/pay_amt6.png')">
+  <div>pay_amt6</div>
+</div>
+<div class="card" data-varname="pay_amt6_truncated">
+  <img src="variable_plots/pay_amt6_truncated.png" alt="pay_amt6_truncated" onclick="showFullSize('variable_plots/pay_amt6_truncated.png')">
+  <div>pay_amt6_truncated</div>
+</div>
+<div class="card" data-varname="sex">
+  <img src="variable_plots/sex.png" alt="sex" onclick="showFullSize('variable_plots/sex.png')">
+  <div>sex</div>
+</div>
+<div class="card" data-varname="status_ge1_last1m">
+  <img src="variable_plots/status_ge1_last1m.png" alt="status_ge1_last1m" onclick="showFullSize('variable_plots/status_ge1_last1m.png')">
+  <div>status_ge1_last1m</div>
+</div>
+<div class="card" data-varname="status_ge1_last2m">
+  <img src="variable_plots/status_ge1_last2m.png" alt="status_ge1_last2m" onclick="showFullSize('variable_plots/status_ge1_last2m.png')">
+  <div>status_ge1_last2m</div>
+</div>
+<div class="card" data-varname="status_ge1_last3m">
+  <img src="variable_plots/status_ge1_last3m.png" alt="status_ge1_last3m" onclick="showFullSize('variable_plots/status_ge1_last3m.png')">
+  <div>status_ge1_last3m</div>
+</div>
+<div class="card" data-varname="status_ge1_last6m">
+  <img src="variable_plots/status_ge1_last6m.png" alt="status_ge1_last6m" onclick="showFullSize('variable_plots/status_ge1_last6m.png')">
+  <div>status_ge1_last6m</div>
+</div>
+<div class="card" data-varname="status_ge2_last1m">
+  <img src="variable_plots/status_ge2_last1m.png" alt="status_ge2_last1m" onclick="showFullSize('variable_plots/status_ge2_last1m.png')">
+  <div>status_ge2_last1m</div>
+</div>
+<div class="card" data-varname="status_ge2_last2m">
+  <img src="variable_plots/status_ge2_last2m.png" alt="status_ge2_last2m" onclick="showFullSize('variable_plots/status_ge2_last2m.png')">
+  <div>status_ge2_last2m</div>
+</div>
+<div class="card" data-varname="status_ge2_last3m">
+  <img src="variable_plots/status_ge2_last3m.png" alt="status_ge2_last3m" onclick="showFullSize('variable_plots/status_ge2_last3m.png')">
+  <div>status_ge2_last3m</div>
+</div>
+<div class="card" data-varname="status_ge2_last6m">
+  <img src="variable_plots/status_ge2_last6m.png" alt="status_ge2_last6m" onclick="showFullSize('variable_plots/status_ge2_last6m.png')">
+  <div>status_ge2_last6m</div>
+</div>
+<div class="card" data-varname="status_ge3_last1m">
+  <img src="variable_plots/status_ge3_last1m.png" alt="status_ge3_last1m" onclick="showFullSize('variable_plots/status_ge3_last1m.png')">
+  <div>status_ge3_last1m</div>
+</div>
+<div class="card" data-varname="status_ge3_last2m">
+  <img src="variable_plots/status_ge3_last2m.png" alt="status_ge3_last2m" onclick="showFullSize('variable_plots/status_ge3_last2m.png')">
+  <div>status_ge3_last2m</div>
+</div>
+<div class="card" data-varname="status_ge3_last3m">
+  <img src="variable_plots/status_ge3_last3m.png" alt="status_ge3_last3m" onclick="showFullSize('variable_plots/status_ge3_last3m.png')">
+  <div>status_ge3_last3m</div>
+</div>
+<div class="card" data-varname="status_ge3_last6m">
+  <img src="variable_plots/status_ge3_last6m.png" alt="status_ge3_last6m" onclick="showFullSize('variable_plots/status_ge3_last6m.png')">
+  <div>status_ge3_last6m</div>
+</div>
+<div class="card" data-varname="status_ge5_last1m">
+  <img src="variable_plots/status_ge5_last1m.png" alt="status_ge5_last1m" onclick="showFullSize('variable_plots/status_ge5_last1m.png')">
+  <div>status_ge5_last1m</div>
+</div>
+<div class="card" data-varname="status_ge5_last2m">
+  <img src="variable_plots/status_ge5_last2m.png" alt="status_ge5_last2m" onclick="showFullSize('variable_plots/status_ge5_last2m.png')">
+  <div>status_ge5_last2m</div>
+</div>
+<div class="card" data-varname="status_ge5_last3m">
+  <img src="variable_plots/status_ge5_last3m.png" alt="status_ge5_last3m" onclick="showFullSize('variable_plots/status_ge5_last3m.png')">
+  <div>status_ge5_last3m</div>
+</div>
+<div class="card" data-varname="status_ge5_last6m">
+  <img src="variable_plots/status_ge5_last6m.png" alt="status_ge5_last6m" onclick="showFullSize('variable_plots/status_ge5_last6m.png')">
+  <div>status_ge5_last6m</div>
+</div>
+<div class="card" data-varname="util_volatility_6m">
+  <img src="variable_plots/util_volatility_6m.png" alt="util_volatility_6m" onclick="showFullSize('variable_plots/util_volatility_6m.png')">
+  <div>util_volatility_6m</div>
+</div>
+<div class="card" data-varname="worst_status_1m">
+  <img src="variable_plots/worst_status_1m.png" alt="worst_status_1m" onclick="showFullSize('variable_plots/worst_status_1m.png')">
+  <div>worst_status_1m</div>
+</div>
+<div class="card" data-varname="worst_status_2m">
+  <img src="variable_plots/worst_status_2m.png" alt="worst_status_2m" onclick="showFullSize('variable_plots/worst_status_2m.png')">
+  <div>worst_status_2m</div>
+</div>
+<div class="card" data-varname="worst_status_3m">
+  <img src="variable_plots/worst_status_3m.png" alt="worst_status_3m" onclick="showFullSize('variable_plots/worst_status_3m.png')">
+  <div>worst_status_3m</div>
+</div>
+<div class="card" data-varname="worst_status_6m">
+  <img src="variable_plots/worst_status_6m.png" alt="worst_status_6m" onclick="showFullSize('variable_plots/worst_status_6m.png')">
+  <div>worst_status_6m</div>
+</div>
+</div>
+<script>
+function showFullSize(imgPath) {
+  window.open(imgPath, "_blank");
+}
+
+document.getElementById("searchInput").addEventListener("input", function(e) {
+  const searchTerm = e.target.value.toLowerCase();
+  const cards = document.getElementsByClassName("card");
+  Array.from(cards).forEach(card => {
+    const varName = card.getAttribute("data-varname").toLowerCase();
+    card.style.display = varName.includes(searchTerm) ? "block" : "none";
+  });
+});
+</script>
+</body>
+</html>
